@@ -28,14 +28,15 @@
 
     .bg-video {
      position: fixed;
-     top: 0;
-     left: 0;
-     width: 100vw;          /* Memenuhi 100% lebar layar */
-     height: 100vh;         /* Memenuhi 100% tinggi layar */
-     object-fit: cover;      /* Memotong bagian luar secara proporsional agar tidak gepeng */
-     object-position: center;/* Memastikan bagian tengah video selalu di tengah layar */
-     z-index: 0;
-     pointer-events: none;  /* Mencegah video mengganggu klik pada tombol/search bar */
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      object-fit: cover; /* Memastikan video memenuhi seluruh layar tanpa merusak rasio */
     }
 
     .bg-overlay {
