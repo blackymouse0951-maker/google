@@ -27,15 +27,15 @@
     }
 
     .bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100vw;
-      min-height: 100vh;
-      object-fit: cover;      /* Memotong bagian luar secara proporsional agar tidak gepeng */
-      object-position: center;/* Memastikan bagian tengah video selalu di tengah layar */
-      z-index: 0;
-      pointer-events: none;
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100vw;          /* Memenuhi 100% lebar layar */
+     height: 100vh;         /* Memenuhi 100% tinggi layar */
+     object-fit: cover;      /* Memotong bagian luar secara proporsional agar tidak gepeng */
+     object-position: center;/* Memastikan bagian tengah video selalu di tengah layar */
+     z-index: 0;
+     pointer-events: none;  /* Mencegah video mengganggu klik pada tombol/search bar */
     }
 
     .bg-overlay {
