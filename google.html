@@ -406,12 +406,12 @@
       let typeSpeed = isDeleting ? 40 : 80;
 
       if (!isDeleting && charIndex === currentWord.length) {
-        typeSpeed = 4500;
+        typeSpeed = 7500;
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 800;
+        typeSpeed = 850;
       }
 
       setTimeout(typeEffect, typeSpeed);
