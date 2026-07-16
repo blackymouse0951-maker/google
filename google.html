@@ -24,7 +24,6 @@
       position: relative;
     }
 
-    /* Overlay gelap tipis agar elemen kontras */
     body::before {
       content: '';
       position: absolute;
@@ -43,7 +42,7 @@
       max-width: 700px;
     }
 
-    /* AREA 2 BUTTON LINGKARAN UTAMA */
+    /* BUTTON LINGKARAN UTAMA */
     .button-group {
       display: flex;
       gap: 30px;
@@ -79,7 +78,7 @@
       fill: currentColor;
     }
 
-    /* KOTAK SEARCH (Tersembunyi secara default) */
+    /* KOTAK SEARCH */
     .search-wrapper {
       width: 100%;
       opacity: 0;
@@ -111,6 +110,7 @@
       margin-right: 12px;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
 
     .search-input {
@@ -162,7 +162,7 @@
       background-color: #e8eaed;
     }
 
-    /* MENU APLIKASI (Tersembunyi secara default) */
+    /* MENU APLIKASI */
     .apps-wrapper {
       display: flex;
       gap: 20px;
@@ -234,41 +234,41 @@
     </div>
 
     <div class="search-wrapper" id="search-container">
-      <div class="search-bar">
-        <div class="search-icon">
+      <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
+        <div class="search-icon" id="search-submit">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
 
-        <input type="text" class="search-input" placeholder="Telusuri Google atau ketik URL">
+        <input type="text" name="q" id="search-input" class="search-input" placeholder="Telusuri Google atau ketik URL" autocomplete="off" required>
 
         <div class="actions-right">
-          <div class="action-icon" title="Telusuri dengan suara">
+          <div class="action-icon" id="mic-btn" title="Telusuri dengan suara">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
           </div>
-          <div class="action-icon" title="Telusuri dengan kamera / Lens">
+          <div class="action-icon" id="lens-btn" title="Google Lens">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#EA4335">
               <path d="M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/>
               <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
             </svg>
           </div>
-          <button class="ai-btn">
+          <button type="button" class="ai-btn" id="ai-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
             </svg>
             Mode AI
           </button>
         </div>
-      </div>
+      </form>
     </div>
 
     <div class="apps-wrapper" id="apps-container">
-      <a href="https://youtube.com" target="_blank" class="app-item">
+      <a href="https://youtube.com" class="app-item">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#FF0000">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -277,7 +277,7 @@
         <span>YouTube</span>
       </a>
 
-      <a href="https://web.whatsapp.com" target="_blank" class="app-item">
+      <a href="https://web.whatsapp.com" class="app-item">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#25D366">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/>
@@ -286,16 +286,16 @@
         <span>WhatsApp</span>
       </a>
 
-      <a href="https://open.spotify.com" target="_blank" class="app-item">
+      <a href="https://open.spotify.com" class="app-item">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#1DB954">
-            <path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
           </svg>
         </div>
         <span>Spotify</span>
       </a>
 
-      <a href="https://github.com" target="_blank" class="app-item">
+      <a href="https://github.com" class="app-item">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#FFFFFF">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -310,29 +310,64 @@
   <script>
     const btnSearchTrigger = document.getElementById('btn-search-trigger');
     const btnAppsTrigger = document.getElementById('btn-apps-trigger');
-    
     const searchContainer = document.getElementById('search-container');
     const appsContainer = document.getElementById('apps-container');
+    const searchInput = document.getElementById('search-input');
+    const searchForm = document.getElementById('search-form');
 
-    // Hover pada Button 1 (Search & Fiturnya)
+    // Hover ke tombol 1 -> Buka Kotak Pencarian & Fokus Teks
     btnSearchTrigger.addEventListener('mouseenter', () => {
       searchContainer.classList.add('active');
-      appsContainer.classList.remove('active'); // Sembunyikan menu apps jika terbuka
+      appsContainer.classList.remove('active');
+      setTimeout(() => searchInput.focus(), 100);
     });
 
-    // Hover pada Button 2 (Aplikasi)
+    // Hover ke tombol 2 -> Buka Menu Apps
     btnAppsTrigger.addEventListener('mouseenter', () => {
       appsContainer.classList.add('active');
-      searchContainer.classList.remove('active'); // Sembunyikan search jika terbuka
+      searchContainer.classList.remove('active');
     });
 
-    // Pertahankan tampilan saat kursor berada di dalam area menu yang terbuka
+    // Sembunyikan HANYA jika mouse keluar DAN kolom pencarian tidak sedang diisi
     searchContainer.addEventListener('mouseleave', () => {
-      searchContainer.classList.remove('active');
+      if (document.activeElement !== searchInput && searchInput.value === '') {
+        searchContainer.classList.remove('active');
+      }
     });
 
     appsContainer.addEventListener('mouseleave', () => {
       appsContainer.classList.remove('active');
+    });
+
+    // Logika Kirim Pencarian saat tekan Enter
+    searchForm.addEventListener('submit', (e) => {
+      const query = searchInput.value.trim();
+      
+      // Jika mengetik URL situs langsung
+      if (/^(http:\/\/|https:\/\/)/.test(query)) {
+        e.preventDefault();
+        window.location.href = query;
+      } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
+        e.preventDefault();
+        window.location.href = 'https://' + query;
+      }
+    });
+
+    // Klik Ikon Kaca Pembesar -> Jalankan Form
+    document.getElementById('search-submit').addEventListener('click', () => {
+      if(searchInput.value.trim() !== '') searchForm.submit();
+    });
+
+    // Google Lens & AI
+    document.getElementById('lens-btn').addEventListener('click', () => {
+      window.location.href = 'https://lens.google.com/';
+    });
+
+    document.getElementById('ai-btn').addEventListener('click', () => {
+      const query = searchInput.value.trim();
+      window.location.href = query 
+        ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
+        : 'https://gemini.google.com/';
     });
   </script>
 
