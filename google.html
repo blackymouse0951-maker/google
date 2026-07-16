@@ -49,30 +49,59 @@
 
     /* WADAH TEKS ANIMASI */
     .animated-text-container {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       min-height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+/* GAYA TULISAN RGB + GRADASI BERGERAK */
     .animated-text {
-      color: #ffffff;
-      font-size: 26px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-      border-right: 3px solid #ffffff; /* Efek Kursor Kedip */
-      white-space: nowrap;
-      animation: blink-cursor 0.8s infinite;
-      padding-right: 5px;
-    }
+  /* Efek Warna Warni (RGB) Gradient */
+  background: linear-gradient(
+    90deg, 
+    #ff0055, 
+    #ff5000, 
+    #ffcc00, 
+    #00ff66, 
+    #00ffff, 
+    #0066ff, 
+    #9900ff, 
+    #ff0055
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  
+  /* Animasi Pergeseran Warna Gradasi */
+  animation: rgb-shift 4s linear infinite;
+  
+  /* Garis Kursor Ketik RGB */
+  border-right: 3px solid #00ffff;
+  white-space: nowrap;
+  padding-right: 5px;
+}
 
-    @keyframes blink-cursor {
-      0%, 100% { border-color: transparent; }
-      50% { border-color: #ffffff; }
-    }
-
+/* ANIMASI PERGESERAN WARNA (RGB SHIFT) */
+@keyframes rgb-shift {
+  0% {
+    background-position: 0% 50%;
+    border-color: #ff0055;
+  }
+  50% {
+    background-position: 100% 50%;
+    border-color: #00ff66;
+  }
+  100% {
+    background-position: 0% 50%;
+    border-color: #ff0055;
+  }
+}
     /* BUTTON LINGKARAN UTAMA */
     .button-group {
       display: flex;
