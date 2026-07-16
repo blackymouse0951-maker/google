@@ -57,8 +57,18 @@
     }
 
 /* GAYA TULISAN RGB + GRADASI BERGERAK */
-    .animated-text {
-  /* Efek Warna Warni (RGB) Gradient */
+    /* WADAH UTAMA TEKS */
+.animated-text-container {
+  margin-bottom: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GAYA TULISAN RGB + KURSOR KEDIP PUTIH */
+.animated-text {
+  /* Teks Warna Warni (RGB) */
   background: linear-gradient(
     90deg, 
     #ff0055, 
@@ -78,28 +88,28 @@
   font-weight: 700;
   letter-spacing: 1px;
   
-  /* Animasi Pergeseran Warna Gradasi */
+  /* Animasi Pergeseran Warna Teks */
   animation: rgb-shift 4s linear infinite;
   
-  /* Garis Kursor Ketik RGB */
-  border-right: 3px #ffffff;
+  /* Simbol | (Kursor) Warna Putih */
+  border-right: 3px solid #ffffff;
   white-space: nowrap;
   padding-right: 5px;
 }
 
-/* ANIMASI PERGESERAN WARNA (RGB SHIFT) */
+/* ANIMASI PERGESERAN WARNA TEKS DENGAN KURSOR KEDIP PUTIH */
 @keyframes rgb-shift {
   0% {
     background-position: 0% 50%;
-    border-color: #ff0055;
+    border-color: #ffffff;
   }
   50% {
     background-position: 100% 50%;
-    border-color: #00ff66;
+    border-color: transparent; /* Membuat kursor berkedip (muncul-hilang) */
   }
   100% {
     background-position: 0% 50%;
-    border-color: #ff0055;
+    border-color: #ffffff;
   }
 }
     /* BUTTON LINGKARAN UTAMA */
