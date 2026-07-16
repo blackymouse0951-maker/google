@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tab Baru</title>
+  <title>Minimalist Google Dashboard</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,15 +14,16 @@
 
     body {
       min-height: 100vh;
+      width: 100vw;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      /* GANTI WALLPAPER DI SINI */
-      padding-top: 25vh;
+      padding-top: 25hv;
       background: #121212 url('wallpaper.jpg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
+      overflow: hidden;
     }
 
     body::before {
@@ -33,21 +34,50 @@
       z-index: 1;
     }
 
+    /* WADAH UTAMA + BANTALAN ATAS */
     .main-container {
       position: relative;
       z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       width: 100%;
       max-width: 700px;
+      padding: 60px 20px 0 20px; /* Bantalan atas 60px */
+    }
+
+    /* TEKS DENGAN ANIMASI KETIK DAN KEDIP KURUSOR */
+    .animated-text-container {
+      margin-bottom: 25px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .animated-text {
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      border-right: 2px solid #ffffff; /* Efek Kursor */
+      white-space: nowrap;
+      animation: blink-cursor 0.8s infinite;
+      padding-right: 4px;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: #ffffff; }
     }
 
     /* BUTTON LINGKARAN UTAMA */
     .button-group {
       display: flex;
       gap: 30px;
-      margin-bottom: 20px;
+      justify-content: center;
     }
 
     .circle-btn {
@@ -79,14 +109,16 @@
       fill: currentColor;
     }
 
-    /* KOTAK SEARCH */
+    /* KOTAK SEARCH ABSOLUTE */
     .search-wrapper {
+      position: absolute;
+      top: 190px; /* Penyesuaian posisi kotak melayang di bawah tombol */
       width: 100%;
+      max-width: 650px;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      margin-bottom: 20px;
     }
 
     .search-wrapper.active {
@@ -148,8 +180,10 @@
       transform: scale(1.03);
     }
 
-    /* MENU APLIKASI */
+    /* MENU APLIKASI ABSOLUTE */
     .apps-wrapper {
+      position: absolute;
+      top: 190px;
       display: flex;
       gap: 20px;
       opacity: 0;
@@ -204,6 +238,10 @@
 <body>
 
   <div class="main-container">
+
+    <div class="animated-text-container">
+      <span class="animated-text" id="typing-text"></span>
+    </div>
 
     <div class="button-group">
       <div class="circle-btn" id="btn-search-trigger" title="Pencarian Google">
@@ -282,6 +320,42 @@
   </div>
 
   <script>
+    // SKRIP ANIMASI TEKS KETIK
+    const words = ["Selamat Datang!", "Mau cari apa hari ini?", "Google Search & AI"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingElement = document.getElementById("typing-text");
+
+    function typeEffect() {
+      const currentWord = words[wordIndex];
+      
+      if (isDeleting) {
+        typingElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let typeSpeed = isDeleting ? 50 : 100;
+
+      if (!isDeleting && charIndex === currentWord.length) {
+        typeSpeed = 2000; // Berhenti sebentar setelah selesai mengetik
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length; // Pindah ke kata berikutnya
+        typeSpeed = 500;
+      }
+
+      setTimeout(typeEffect, typeSpeed);
+    }
+
+    // Jalankan Animasi Ketik saat Halaman Dimuat
+    document.addEventListener("DOMContentLoaded", typeEffect);
+
+    // LOGIKA BUTTON DAN SEARCH
     const btnSearchTrigger = document.getElementById('btn-search-trigger');
     const btnAppsTrigger = document.getElementById('btn-apps-trigger');
     const searchContainer = document.getElementById('search-container');
@@ -289,7 +363,6 @@
     const searchInput = document.getElementById('search-input');
     const searchForm = document.getElementById('search-form');
 
-    // Interaksi Hover Menu
     btnSearchTrigger.addEventListener('mouseenter', () => {
       searchContainer.classList.add('active');
       appsContainer.classList.remove('active');
@@ -311,7 +384,6 @@
       appsContainer.classList.remove('active');
     });
 
-    // Submisi Pencarian Biasa / URL
     searchForm.addEventListener('submit', (e) => {
       const query = searchInput.value.trim();
       if (!query) {
@@ -331,7 +403,6 @@
       if(searchInput.value.trim() !== '') searchForm.submit();
     });
 
-    // FUNGSI MODE AI: Langsung membawa pencarian atau mengarahkan ke Gemini
     document.getElementById('ai-btn').addEventListener('click', () => {
       const query = searchInput.value.trim();
       if (query) {
