@@ -12,18 +12,17 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* KUNCI POSISI TENAH-TENAH: menggunakan Flexbox pada Body */
     body {
       min-height: 100vh;
       width: 100vw;
       display: flex;
       flex-direction: column;
-      align-items: center;      /* Sumbu Horizontal (Kiri-Kanan) Tepat di Tengah */
-      justify-content: center; /* Sumbu Vertikal (Atas-Bawah) Tepat di Tengah */
+      align-items: center;
+      justify-content: center;
       background: #121212 url('wallpaper.jpg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
-      overflow: hidden;         /* Menghindari scrollbar yang menggeser posisi tengah */
+      overflow: hidden;
     }
 
     body::before {
@@ -34,6 +33,7 @@
       z-index: 1;
     }
 
+    /* WADAH UTAMA */
     .main-container {
       position: relative;
       z-index: 2;
@@ -43,7 +43,33 @@
       justify-content: center;
       width: 100%;
       max-width: 700px;
-      padding: 0 20px;
+      padding: 20px;
+    }
+
+    /* WADAH TEKS ANIMASI */
+    .animated-text-container {
+      margin-bottom: 20px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .animated-text {
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      border-right: 3px solid #ffffff; /* Efek Kursor Kedip */
+      white-space: nowrap;
+      animation: blink-cursor 0.8s infinite;
+      padding-right: 5px;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: #ffffff; }
     }
 
     /* BUTTON LINGKARAN UTAMA */
@@ -51,6 +77,7 @@
       display: flex;
       gap: 30px;
       justify-content: center;
+      margin-bottom: 20px;
     }
 
     .circle-btn {
@@ -82,22 +109,25 @@
       fill: currentColor;
     }
 
-    /* KOTAK SEARCH ABSOLUTE AGAR TIDAK MENGGESER TOMBOL UTAMA */
-    .search-wrapper {
+    /* KOTAK SEARCH & APPS */
+    .pop-content {
       position: absolute;
-      top: 80px; /* Muncul sedikit di bawah tombol */
-      width: 100%;
-      max-width: 650px;
+      top: 150px; /* Disesuaikan agar pas melayang di bawah tombol */
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .search-wrapper.active {
+    .pop-content.active {
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
+    }
+
+    .search-wrapper {
+      width: 100%;
+      max-width: 650px;
     }
 
     .search-bar {
@@ -153,28 +183,15 @@
       transform: scale(1.03);
     }
 
-    /* MENU APLIKASI ABSOLUTE */
     .apps-wrapper {
-      position: absolute;
-      top: 80px; /* Muncul sedikit di bawah tombol */
       display: flex;
       gap: 20px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       padding: 15px 25px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .apps-wrapper.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
     }
 
     .app-item {
@@ -212,6 +229,10 @@
 
   <div class="main-container">
 
+    <div class="animated-text-container">
+      <span class="animated-text" id="typing-text"></span>
+    </div>
+
     <div class="button-group">
       <div class="circle-btn" id="btn-search-trigger" title="Pencarian Google">
         <svg viewBox="0 0 24 24">
@@ -226,7 +247,7 @@
       </div>
     </div>
 
-    <div class="search-wrapper" id="search-container">
+    <div class="search-wrapper pop-content" id="search-container">
       <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
         <div class="search-icon" id="search-submit">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -248,7 +269,7 @@
       </form>
     </div>
 
-    <div class="apps-wrapper" id="apps-container">
+    <div class="apps-wrapper pop-content" id="apps-container">
       <a href="https://youtube.com" class="app-item">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#FF0000">
@@ -289,6 +310,44 @@
   </div>
 
   <script>
+    // FUNGSI ANIMASI KETIK
+    const words = ["Selamat Datang!", "Mau cari apa hari ini?", "Google Search & AI"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+      const typingElement = document.getElementById("typing-text");
+      if (!typingElement) return;
+
+      const currentWord = words[wordIndex];
+      
+      if (isDeleting) {
+        typingElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let typeSpeed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentWord.length) {
+        typeSpeed = 2000;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        typeSpeed = 400;
+      }
+
+      setTimeout(typeEffect, typeSpeed);
+    }
+
+    // Jalankan animasi secara langsung
+    typeEffect();
+
+    // INTERAKSI TOMBOL PENCARIAN & APLIKASI
     const btnSearchTrigger = document.getElementById('btn-search-trigger');
     const btnAppsTrigger = document.getElementById('btn-apps-trigger');
     const searchContainer = document.getElementById('search-container');
@@ -296,7 +355,6 @@
     const searchInput = document.getElementById('search-input');
     const searchForm = document.getElementById('search-form');
 
-    // Interaksi Hover
     btnSearchTrigger.addEventListener('mouseenter', () => {
       searchContainer.classList.add('active');
       appsContainer.classList.remove('active');
@@ -318,7 +376,6 @@
       appsContainer.classList.remove('active');
     });
 
-    // Submisi Pencarian
     searchForm.addEventListener('submit', (e) => {
       const query = searchInput.value.trim();
       if (!query) {
@@ -338,7 +395,6 @@
       if(searchInput.value.trim() !== '') searchForm.submit();
     });
 
-    // Mode AI
     document.getElementById('ai-btn').addEventListener('click', () => {
       const query = searchInput.value.trim();
       if (query) {
