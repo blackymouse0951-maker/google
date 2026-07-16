@@ -12,19 +12,18 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* KUNCI POSISI TENAH-TENAH: menggunakan Flexbox pada Body */
     body {
       min-height: 100vh;
       width: 100vw;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      /* MENGGESER POSISI AGAK KE BAWAH: ganti center dengan flex-end / atur margin */
-      justify-content: center; 
-      padding-top: 12vh; /* Memberi jarak dari atas agar posisi turun ke bawah */
+      align-items: center;      /* Sumbu Horizontal (Kiri-Kanan) Tepat di Tengah */
+      justify-content: center; /* Sumbu Vertikal (Atas-Bawah) Tepat di Tengah */
       background: #121212 url('wallpaper.jpg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
-      overflow: hidden;
+      overflow: hidden;         /* Menghindari scrollbar yang menggeser posisi tengah */
     }
 
     body::before {
@@ -83,10 +82,10 @@
       fill: currentColor;
     }
 
-    /* KOTAK SEARCH ABSOLUTE */
+    /* KOTAK SEARCH ABSOLUTE AGAR TIDAK MENGGESER TOMBOL UTAMA */
     .search-wrapper {
       position: absolute;
-      top: 80px;
+      top: 80px; /* Muncul sedikit di bawah tombol */
       width: 100%;
       max-width: 650px;
       opacity: 0;
@@ -157,7 +156,7 @@
     /* MENU APLIKASI ABSOLUTE */
     .apps-wrapper {
       position: absolute;
-      top: 80px;
+      top: 80px; /* Muncul sedikit di bawah tombol */
       display: flex;
       gap: 20px;
       opacity: 0;
