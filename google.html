@@ -42,7 +42,7 @@
       left: 0; 
       width: 100%; 
       height: 100%;
-      background: rgba(0, 0, 0, 0.4); /* Mengatur kegelapan agar teks/tombol tetap terbaca */
+      background: rgba(0, 0, 0, 0.4);
       z-index: 1;
     }
 
@@ -79,7 +79,6 @@
 
     /* GAYA TULISAN RGB + KURSOR KEDIP PUTIH */
     .animated-text {
-      /* Teks Warna Warni (RGB) */
       background: linear-gradient(
         90deg, 
         #ff0055, 
@@ -99,16 +98,13 @@
       font-weight: 800;
       letter-spacing: 1px;
       
-      /* Animasi Pergeseran Warna Teks */
       animation: rgb-shift 4s linear infinite;
       
-      /* Simbol | (Kursor) Warna Putih */
       border-right: 3px solid #ffffff;
       white-space: nowrap;
       padding-right: 5px;
     }
 
-    /* ANIMASI PERGESERAN WARNA TEKS DENGAN KURSOR KEDIP PUTIH */
     @keyframes rgb-shift {
       0% {
         background-position: 0% 50%;
@@ -116,7 +112,7 @@
       }
       50% {
         background-position: 100% 50%;
-        border-color: transparent; /* Membuat kursor berkedip (muncul-hilang) */
+        border-color: transparent;
       }
       100% {
         background-position: 0% 50%;
@@ -164,7 +160,7 @@
     /* KOTAK SEARCH & APPS */
     .pop-content {
       position: absolute;
-      top: 190px; /* Disesuaikan agar pas melayang di bawah tombol */
+      top: 190px;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
@@ -180,6 +176,7 @@
     .search-wrapper {
       width: 100%;
       max-width: 650px;
+      position: relative; /* DITAMBAHKAN: Agar kotak rekomendasi melayang presisi di bawahnya */
     }
 
     .search-bar {
@@ -191,6 +188,8 @@
       align-items: center;
       padding: 0 18px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
     }
 
     .search-icon {
@@ -285,7 +284,7 @@
     /* KOTAK REKOMENDASI / SUGGESTIONS */
     .suggestions-box {
       position: absolute;
-      top: 52px;
+      top: 50px;
       left: 0;
       right: 0;
       background: #ffffff;
@@ -295,7 +294,9 @@
       overflow: hidden;
       display: none;
       z-index: 9;
+      padding-top: 6px;
       padding-bottom: 8px;
+      border-top: 1px solid #e0e0e0;
     }
 
     .suggestion-item {
@@ -350,7 +351,6 @@
 
     <div class="search-wrapper pop-content" id="search-container">
       <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
-      <div class="suggestions-box" id="suggestions-box"></div> <!-- KOTAK WADAH REKOMENDASI -->
         <div class="search-icon" id="search-submit">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -369,6 +369,8 @@
           </button>
         </div>
       </form>
+      <!-- KOTAK WADAH REKOMENDASI (Dipindah tepat di bawah form) -->
+      <div class="suggestions-box" id="suggestions-box"></div>
     </div>
 
     <div class="apps-wrapper pop-content" id="apps-container">
@@ -515,7 +517,6 @@
       currentFocus = -1;
     }
 
-    // Event saat mengetik & navigasi tombol keyboard (Panah & Enter)
     // --- FUNGSI DEBOUNCE ---
     function debounce(func, delay) {
       let timeoutId;
@@ -537,25 +538,6 @@
     });
 
     // Event navigasi tombol keyboard (Panah & Enter)
-    searchInput.addEventListener('keydown', (e) => {
-      const items = suggestionsBox.getElementsByClassName('suggestion-item');
-      
-      if (e.key === 'ArrowDown') {
-        currentFocus++;
-        addActive(items);
-      } else if (e.key === 'ArrowUp') {
-        currentFocus--;
-        addActive(items);
-      } else if (e.key === 'Enter') {
-        if (currentFocus > -1 && items[currentFocus]) {
-          e.preventDefault();
-          items[currentFocus].click();
-        }
-      } else if (e.key === 'Escape') {
-        hideSuggestions();
-      }
-    });
-
     searchInput.addEventListener('keydown', (e) => {
       const items = suggestionsBox.getElementsByClassName('suggestion-item');
       
