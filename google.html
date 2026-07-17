@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tab Baru</title>
   <style>
     * {
@@ -12,24 +12,28 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    :root {
+      --glass: rgba(255, 255, 255, 0.18);
+      --glass-strong: rgba(255, 255, 255, 0.28);
+      --text: #ffffff;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
     body {
       min-height: 100vh;
       width: 100vw;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding-bottom: 15vh;
       background: #121212;
-      position: relative;
       overflow: hidden;
+      position: relative;
+      padding: 24px;
     }
 
-    /* FIX: VIDEO FULL SCREEN PRESISI */
     .bg-video {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       object-fit: cover;
@@ -38,117 +42,89 @@
 
     .bg-overlay {
       position: fixed;
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.38);
       z-index: 1;
     }
 
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 1;
-    }
-
-    /* WADAH UTAMA */
     .main-container {
       position: relative;
       z-index: 2;
+      width: 100%;
+      max-width: 700px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 700px;
+      gap: 22px;
       padding: 20px;
     }
 
-    /* WADAH UTAMA TEKS */
     .animated-text-container {
-      margin-top: -30px;
-      margin-bottom: 25px;
-      min-height: 50px;
+      min-height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* GAYA TULISAN RGB + KURSOR KEDIP PUTIH */
     .animated-text {
       background: linear-gradient(
-        90deg, 
-        #ff0055, 
-        #ff5000, 
-        #ffcc00, 
-        #00ff66, 
-        #00ffff, 
-        #0066ff, 
-        #9900ff, 
+        90deg,
+        #ff0055,
+        #ff5000,
+        #ffcc00,
+        #00ff66,
+        #00ffff,
+        #0066ff,
+        #9900ff,
         #ff0055
       );
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      
-      font-size: 40px;
+      font-size: clamp(28px, 4vw, 40px);
       font-weight: 800;
       letter-spacing: 1px;
-      
       animation: rgb-shift 4s linear infinite;
-      
-      border-right: 3px solid #ffffff;
+      border-right: 3px solid #fff;
       white-space: nowrap;
       padding-right: 5px;
+      text-align: center;
     }
 
     @keyframes rgb-shift {
-      0% {
-        background-position: 0% 50%;
-        border-color: #ffffff;
-      }
-      50% {
-        background-position: 100% 50%;
-        border-color: transparent;
-      }
-      100% {
-        background-position: 0% 50%;
-        border-color: #ffffff;
-      }
+      0% { background-position: 0% 50%; border-color: #ffffff; }
+      50% { background-position: 100% 50%; border-color: transparent; }
+      100% { background-position: 0% 50%; border-color: #ffffff; }
     }
 
-    /* BUTTON LINGKARAN UTAMA */
     .button-group {
       display: flex;
-      gap: 30px;
+      gap: 24px;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-top: 4px;
     }
 
     .circle-btn {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
     }
 
     .circle-btn:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: var(--glass-strong);
       transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
     }
 
     .circle-btn svg {
@@ -157,42 +133,45 @@
       fill: currentColor;
     }
 
-    /* KOTAK SEARCH & APPS */
     .pop-content {
       position: absolute;
-      top: 25px;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
     }
-    /* Menurunkan khusus wadah/bantalan aplikasi saja */
-    #apps-container {
-      top: 190px; /* Atur nilai ini sesuai tingkat penurunan yang kamu mau */
-    }
+
     .pop-content.active {
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
+      pointer-events: auto;
     }
 
     .search-wrapper {
       width: 100%;
       max-width: 650px;
-      position: relative; /* DITAMBAHKAN: Agar kotak rekomendasi melayang presisi di bawahnya */
+      position: relative;
+      margin-top: 10px;
     }
 
     .search-bar {
       width: 100%;
-      background: #ffffff;
+      background: #fff;
       height: 52px;
       border-radius: 26px;
       display: flex;
       align-items: center;
       padding: 0 18px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       position: relative;
       z-index: 10;
+    }
+
+    .search-bar.has-suggestions {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     .search-icon {
@@ -201,6 +180,7 @@
       display: flex;
       align-items: center;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .search-input {
@@ -210,11 +190,13 @@
       font-size: 16px;
       color: #202124;
       background: transparent;
+      min-width: 0;
     }
 
     .actions-right {
       display: flex;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .ai-btn {
@@ -237,13 +219,54 @@
       transform: scale(1.03);
     }
 
+    .suggestions-box {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: none;
+      z-index: 9;
+      padding-top: 6px;
+      padding-bottom: 8px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .suggestion-item {
+      padding: 10px 20px;
+      font-size: 15px;
+      color: #202124;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+      background-color: #f1f3f4;
+    }
+
+    .suggestion-item svg {
+      width: 16px;
+      height: 16px;
+      fill: #70757a;
+      flex-shrink: 0;
+    }
+
     .apps-wrapper {
       display: flex;
-      gap: 20px;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      padding: 15px 25px;
+      padding: 15px 22px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -278,62 +301,43 @@
       height: 26px;
     }
 
-    /* Mengubah lengkungan bawah search bar jika saran muncul */
-    .search-bar.has-suggestions {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
+    @media (max-width: 600px) {
+      .button-group {
+        gap: 16px;
+      }
 
-    /* KOTAK REKOMENDASI / SUGGESTIONS */
-    .suggestions-box {
-      position: absolute;
-      top: 100px;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      overflow: hidden;
-      display: none;
-      z-index: 9;
-      padding-top: 6px;
-      padding-bottom: 8px;
-      border-top: 1px solid #e0e0e0;
-    }
+      .circle-btn {
+        width: 58px;
+        height: 58px;
+      }
 
-    .suggestion-item {
-      padding: 10px 20px;
-      font-size: 15px;
-      color: #202124;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+      .search-bar {
+        height: 50px;
+        padding: 0 14px;
+      }
 
-    .suggestion-item:hover, .suggestion-item.selected {
-      background-color: #f1f3f4;
-    }
+      .ai-btn {
+        padding: 7px 10px;
+        font-size: 12px;
+      }
 
-    .suggestion-item svg {
-      width: 16px;
-      height: 16px;
-      fill: #70757a;
+      .animated-text {
+        white-space: normal;
+        border-right-width: 2px;
+      }
     }
   </style>
 </head>
 <body>
 
   <video class="bg-video" autoplay loop muted playsinline>
-    <source src="Video pxm.mov" type="video/mp4">
+    <source src="Video pxm.mov" type="video/quicktime">
     Browser Anda tidak mendukung tag video.
   </video>
 
   <div class="bg-overlay"></div>
 
   <div class="main-container">
-
     <div class="animated-text-container">
       <span class="animated-text" id="typing-text"></span>
     </div>
@@ -354,14 +358,21 @@
 
     <div class="search-wrapper pop-content" id="search-container">
       <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
-        <div class="search-icon" id="search-submit">
+        <div class="search-icon" id="search-submit" title="Cari">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
 
-        <input type="text" name="q" id="search-input" class="search-input" placeholder="Telusuri Google atau ketik URL" autocomplete="off">
+        <input
+          type="text"
+          name="q"
+          id="search-input"
+          class="search-input"
+          placeholder="Telusuri Google atau ketik URL"
+          autocomplete="off"
+        />
 
         <div class="actions-right">
           <button type="button" class="ai-btn" id="ai-btn">
@@ -372,12 +383,12 @@
           </button>
         </div>
       </form>
-      <!-- KOTAK WADAH REKOMENDASI (Dipindah tepat di bawah form) -->
+
       <div class="suggestions-box" id="suggestions-box"></div>
     </div>
 
     <div class="apps-wrapper pop-content" id="apps-container">
-      <a href="https://youtube.com" class="app-item">
+      <a href="https://youtube.com" class="app-item" target="_blank" rel="noopener noreferrer">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#FF0000">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -386,7 +397,7 @@
         <span>YouTube</span>
       </a>
 
-      <a href="https://web.whatsapp.com" class="app-item">
+      <a href="https://web.whatsapp.com" class="app-item" target="_blank" rel="noopener noreferrer">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#25D366">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/>
@@ -395,16 +406,16 @@
         <span>WhatsApp</span>
       </a>
 
-      <a href="https://spotify.com" class="app-item">
+      <a href="https://spotify.com" class="app-item" target="_blank" rel="noopener noreferrer">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#1DB954">
-            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
           </svg>
         </div>
         <span>Spotify</span>
       </a>
 
-      <a href="https://github.com" class="app-item">
+      <a href="https://github.com" class="app-item" target="_blank" rel="noopener noreferrer">
         <div class="app-icon-box">
           <svg viewBox="0 0 24 24" fill="#FFFFFF">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -413,39 +424,45 @@
         <span>GitHub</span>
       </a>
     </div>
-
   </div>
 
   <script>
-    // FUNGSI ANIMASI KETIK
-    const words = ["Welcome Firman!", "What are you looking for today ?", "Google Search & AI"];
+    const words = ["Welcome Firman!", "What are you looking for today?", "Google Search & AI"];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
 
-    function typeEffect() {
-      const typingElement = document.getElementById("typing-text");
-      if (!typingElement) return;
+    const typingElement = document.getElementById("typing-text");
+    const btnSearchTrigger = document.getElementById("btn-search-trigger");
+    const btnAppsTrigger = document.getElementById("btn-apps-trigger");
+    const searchContainer = document.getElementById("search-container");
+    const appsContainer = document.getElementById("apps-container");
+    const searchInput = document.getElementById("search-input");
+    const searchForm = document.getElementById("search-form");
+    const suggestionsBox = document.getElementById("suggestions-box");
+    const searchBar = document.querySelector(".search-bar");
+    let currentFocus = -1;
 
+    function typeEffect() {
       const currentWord = words[wordIndex];
-      
+
       if (isDeleting) {
-        typingElement.textContent = currentWord.substring(0, charIndex - 1);
         charIndex--;
+        typingElement.textContent = currentWord.substring(0, charIndex);
       } else {
-        typingElement.textContent = currentWord.substring(0, charIndex + 1);
         charIndex++;
+        typingElement.textContent = currentWord.substring(0, charIndex);
       }
 
       let typeSpeed = isDeleting ? 40 : 80;
 
       if (!isDeleting && charIndex === currentWord.length) {
-        typeSpeed = 7500;
+        typeSpeed = 1800;
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 850;
+        typeSpeed = 600;
       }
 
       setTimeout(typeEffect, typeSpeed);
@@ -453,55 +470,40 @@
 
     typeEffect();
 
-    // INTERAKSI TOMBOL PENCARIAN & APLIKASI
-    const btnSearchTrigger = document.getElementById('btn-search-trigger');
-    const btnAppsTrigger = document.getElementById('btn-apps-trigger');
-    const searchContainer = document.getElementById('search-container');
-    const appsContainer = document.getElementById('apps-container');
-    const searchInput = document.getElementById('search-input');
-    const searchForm = document.getElementById('search-form');
-    const suggestionsBox = document.getElementById('suggestions-box');
-    const searchBar = document.querySelector('.search-bar');
-    let currentFocus = -1;
-
-    // Fungsi JSONP callback untuk menangkap data dari Google
     window.handleSuggestions = function(data) {
-      const suggestions = data[1];
-      if (suggestions && suggestions.length > 0) {
-        showSuggestions(suggestions);
-      } else {
-        hideSuggestions();
-      }
+      const suggestions = data?.[1] || [];
+      if (suggestions.length > 0) showSuggestions(suggestions);
+      else hideSuggestions();
     };
 
-    // Ambil rekomendasi dari API Google
     function fetchSuggestions(query) {
       if (!query.trim()) {
         hideSuggestions();
         return;
       }
-      const oldScript = document.getElementById('jsonp-suggestions');
+
+      const oldScript = document.getElementById("jsonp-suggestions");
       if (oldScript) oldScript.remove();
 
-      const script = document.createElement('script');
-      script.id = 'jsonp-suggestions';
+      const script = document.createElement("script");
+      script.id = "jsonp-suggestions";
       script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
       document.body.appendChild(script);
     }
 
     function showSuggestions(list) {
-      suggestionsBox.innerHTML = '';
+      suggestionsBox.innerHTML = "";
       currentFocus = -1;
 
       list.slice(0, 6).forEach((text) => {
-        const item = document.createElement('div');
-        item.className = 'suggestion-item';
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
         item.innerHTML = `
           <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           <span>${text}</span>
         `;
-        
-        item.addEventListener('click', () => {
+
+        item.addEventListener("click", () => {
           searchInput.value = text;
           searchForm.submit();
         });
@@ -509,53 +511,48 @@
         suggestionsBox.appendChild(item);
       });
 
-      suggestionsBox.style.display = 'block';
-      searchBar.classList.add('has-suggestions');
+      suggestionsBox.style.display = "block";
+      searchBar.classList.add("has-suggestions");
     }
 
     function hideSuggestions() {
-      suggestionsBox.style.display = 'none';
-      suggestionsBox.innerHTML = '';
-      searchBar.classList.remove('has-suggestions');
+      suggestionsBox.style.display = "none";
+      suggestionsBox.innerHTML = "";
+      searchBar.classList.remove("has-suggestions");
       currentFocus = -1;
     }
 
-    // --- FUNGSI DEBOUNCE ---
     function debounce(func, delay) {
       let timeoutId;
       return function (...args) {
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          func.apply(this, args);
-        }, delay);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
       };
     }
 
-    const debouncedFetchSuggestions = debounce((query) => {
-      fetchSuggestions(query);
-    }, 300);
+    const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
 
-    // Event saat mengetik (menggunakan Debounce)
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener("input", (e) => {
       debouncedFetchSuggestions(e.target.value);
     });
 
-    // Event navigasi tombol keyboard (Panah & Enter)
-    searchInput.addEventListener('keydown', (e) => {
-      const items = suggestionsBox.getElementsByClassName('suggestion-item');
-      
-      if (e.key === 'ArrowDown') {
+    searchInput.addEventListener("keydown", (e) => {
+      const items = suggestionsBox.getElementsByClassName("suggestion-item");
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
         currentFocus++;
         addActive(items);
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
         currentFocus--;
         addActive(items);
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         if (currentFocus > -1 && items[currentFocus]) {
           e.preventDefault();
           items[currentFocus].click();
         }
-      } else if (e.key === 'Escape') {
+      } else if (e.key === "Escape") {
         hideSuggestions();
       }
     });
@@ -567,72 +564,68 @@
       if (currentFocus >= items.length) currentFocus = 0;
       if (currentFocus < 0) currentFocus = items.length - 1;
 
-      items[currentFocus].classList.add('selected');
-      searchInput.value = items[currentFocus].querySelector('span').textContent;
+      items[currentFocus].classList.add("selected");
+      searchInput.value = items[currentFocus].querySelector("span").textContent;
     }
 
     function removeActive(items) {
       for (let i = 0; i < items.length; i++) {
-        items[i].classList.remove('selected');
+        items[i].classList.remove("selected");
       }
     }
 
-    // Sembunyikan rekomendasi jika klik di luar
-    document.addEventListener('click', (e) => {
-      if (!searchContainer.contains(e.target)) {
-        hideSuggestions();
-      }
+    document.addEventListener("click", (e) => {
+      if (!searchContainer.contains(e.target)) hideSuggestions();
     });
 
-    btnSearchTrigger.addEventListener('mouseenter', () => {
-      searchContainer.classList.add('active');
-      appsContainer.classList.remove('active');
+    btnSearchTrigger.addEventListener("mouseenter", () => {
+      searchContainer.classList.add("active");
+      appsContainer.classList.remove("active");
       setTimeout(() => searchInput.focus(), 100);
     });
 
-    btnAppsTrigger.addEventListener('mouseenter', () => {
-      appsContainer.classList.add('active');
-      searchContainer.classList.remove('active');
+    btnAppsTrigger.addEventListener("mouseenter", () => {
+      appsContainer.classList.add("active");
+      searchContainer.classList.remove("active");
+      hideSuggestions();
     });
 
-    searchContainer.addEventListener('mouseleave', () => {
-      if (document.activeElement !== searchInput && searchInput.value === '') {
-        searchContainer.classList.remove('active');
+    searchContainer.addEventListener("mouseleave", () => {
+      if (document.activeElement !== searchInput && searchInput.value === "") {
+        searchContainer.classList.remove("active");
       }
     });
 
-    appsContainer.addEventListener('mouseleave', () => {
-      appsContainer.classList.remove('active');
+    appsContainer.addEventListener("mouseleave", () => {
+      appsContainer.classList.remove("active");
     });
 
-    searchForm.addEventListener('submit', (e) => {
+    searchForm.addEventListener("submit", (e) => {
       const query = searchInput.value.trim();
       if (!query) {
         e.preventDefault();
         return;
       }
-      if (/^(http:\/\/|https:\/\/)/.test(query)) {
+
+      if (/^(https?:\/\/)/i.test(query)) {
         e.preventDefault();
         window.location.href = query;
       } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
         e.preventDefault();
-        window.location.href = 'https://' + query;
+        window.location.href = "https://" + query;
       }
     });
 
-    document.getElementById('search-submit').addEventListener('click', () => {
-      if(searchInput.value.trim() !== '') searchForm.submit();
+    document.getElementById("search-submit").addEventListener("click", () => {
+      if (searchInput.value.trim() !== "") searchForm.requestSubmit();
     });
 
-    document.getElementById('ai-btn').addEventListener('click', () => {
+    document.getElementById("ai-btn").addEventListener("click", () => {
       const query = searchInput.value.trim();
-      if (query) {
-        window.location.href = `https://gemini.google.com/app?q=${encodeURIComponent(query)}`;
-      } else {
-        window.location.href = 'https://gemini.google.com/';
-      }
+      window.location.href = query
+        ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
+        : "https://gemini.google.com/";
     });
   </script>
-
 </body>
 </html>
