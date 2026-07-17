@@ -25,7 +25,7 @@
       overflow: hidden;
     }
 
-    /* FIX: VIDEO FULL SCREEN PRESISI */
+    /* VIDEO FULL SCREEN PRESISI */
     .bg-video {
       position: fixed;
       top: 0;
@@ -42,15 +42,7 @@
       left: 0; 
       width: 100%; 
       height: 100%;
-      background: rgba(0, 0, 0, 0.4); /* Mengatur kegelapan agar teks/tombol tetap terbaca */
-      z-index: 1;
-    }
-
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.4);
       z-index: 1;
     }
 
@@ -77,9 +69,8 @@
       justify-content: center;
     }
 
-    /* GAYA TULISAN RGB + KURSOR KEDIP PUTIH */
+    /* GAYA TULISAN RGB */
     .animated-text {
-      /* Teks Warna Warni (RGB) */
       background: linear-gradient(
         90deg, 
         #ff0055, 
@@ -98,17 +89,13 @@
       font-size: 40px;
       font-weight: 800;
       letter-spacing: 1px;
-      
-      /* Animasi Pergeseran Warna Teks */
       animation: rgb-shift 4s linear infinite;
       
-      /* Simbol | (Kursor) Warna Putih */
       border-right: 3px solid #ffffff;
       white-space: nowrap;
       padding-right: 5px;
     }
 
-    /* ANIMASI PERGESERAN WARNA TEKS DENGAN KURSOR KEDIP PUTIH */
     @keyframes rgb-shift {
       0% {
         background-position: 0% 50%;
@@ -116,7 +103,7 @@
       }
       50% {
         background-position: 100% 50%;
-        border-color: transparent; /* Membuat kursor berkedip (muncul-hilang) */
+        border-color: transparent;
       }
       100% {
         background-position: 0% 50%;
@@ -164,11 +151,13 @@
     /* KOTAK SEARCH & APPS */
     .pop-content {
       position: absolute;
-      top: 190px; /* Disesuaikan agar pas melayang di bawah tombol */
+      top: 190px;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      max-width: 650px;
     }
 
     .pop-content.active {
@@ -178,8 +167,8 @@
     }
 
     .search-wrapper {
+      position: relative;
       width: 100%;
-      max-width: 650px;
     }
 
     .search-bar {
@@ -191,6 +180,14 @@
       align-items: center;
       padding: 0 18px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Mengubah lengkungan bawah search bar jika saran muncul */
+    .search-bar.has-suggestions {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     .search-icon {
@@ -235,8 +232,45 @@
       transform: scale(1.03);
     }
 
+    /* KOTAK REKOMENDASI / SUGGESTIONS */
+    .suggestions-box {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      overflow: hidden;
+      display: none;
+      z-index: 9;
+      padding-bottom: 8px;
+    }
+
+    .suggestion-item {
+      padding: 10px 20px;
+      font-size: 15px;
+      color: #202124;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .suggestion-item:hover, .suggestion-item.selected {
+      background-color: #f1f3f4;
+    }
+
+    .suggestion-item svg {
+      width: 16px;
+      height: 16px;
+      fill: #70757a;
+    }
+
     .apps-wrapper {
       display: flex;
+      justify-content: center;
       gap: 20px;
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(12px);
@@ -326,6 +360,9 @@
           </button>
         </div>
       </form>
+
+      <!-- KOTAK WADAH REKOMENDASI -->
+      <div class="suggestions-box" id="suggestions-box"></div>
     </div>
 
     <div class="apps-wrapper pop-content" id="apps-container">
@@ -412,6 +449,8 @@
     const appsContainer = document.getElementById('apps-container');
     const searchInput = document.getElementById('search-input');
     const searchForm = document.getElementById('search-form');
+    const suggestionsBox = document.getElementById('suggestions-box');
+    const searchBar = document.querySelector('.search-bar');
 
     btnSearchTrigger.addEventListener('mouseenter', () => {
       searchContainer.classList.add('active');
@@ -422,11 +461,13 @@
     btnAppsTrigger.addEventListener('mouseenter', () => {
       appsContainer.classList.add('active');
       searchContainer.classList.remove('active');
+      hideSuggestions();
     });
 
     searchContainer.addEventListener('mouseleave', () => {
       if (document.activeElement !== searchInput && searchInput.value === '') {
         searchContainer.classList.remove('active');
+        hideSuggestions();
       }
     });
 
@@ -434,23 +475,145 @@
       appsContainer.classList.remove('active');
     });
 
+    // ==========================================
+    // FITUR REKOMENDASI PENCARIAN (AUTOCOMPLETE)
+    // ==========================================
+    let currentFocus = -1;
+
+    // Fungsi JSONP callback untuk menangkap data dari Google
+    window.handleSuggestions = function(data) {
+      const suggestions = data[1];
+      if (suggestions && suggestions.length > 0) {
+        showSuggestions(suggestions);
+      } else {
+        hideSuggestions();
+      }
+    };
+
+    // Fungsi mengambil saran kata dari API Google
+    function fetchSuggestions(query) {
+      if (!query.trim()) {
+        hideSuggestions();
+        return;
+      }
+      // Hapus script lama jika ada
+      const oldScript = document.getElementById('jsonp-suggestions');
+      if (oldScript) oldScript.remove();
+
+      // Buat script JSONP baru
+      const script = document.createElement('script');
+      script.id = 'jsonp-suggestions';
+      script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+      document.body.appendChild(script);
+    }
+
+    function showSuggestions(list) {
+      suggestionsBox.innerHTML = '';
+      currentFocus = -1;
+
+      // Ambil maksimal 6 rekomendasi
+      list.slice(0, 6).forEach((text) => {
+        const item = document.createElement('div');
+        item.className = 'suggestion-item';
+        item.innerHTML = `
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <span>${text}</span>
+        `;
+        
+        item.addEventListener('click', () => {
+          searchInput.value = text;
+          submitSearch(text);
+        });
+
+        suggestionsBox.appendChild(item);
+      });
+
+      suggestionsBox.style.display = 'block';
+      searchBar.classList.add('has-suggestions');
+    }
+
+    function hideSuggestions() {
+      suggestionsBox.style.display = 'none';
+      suggestionsBox.innerHTML = '';
+      searchBar.classList.remove('has-suggestions');
+      currentFocus = -1;
+    }
+
+    // Event Listener saat mengetik & Navigasi Panah Keyboard
+    searchInput.addEventListener('input', (e) => {
+      fetchSuggestions(e.target.value);
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      const items = suggestionsBox.getElementsByClassName('suggestion-item');
+      
+      if (e.key === 'ArrowDown') {
+        currentFocus++;
+        addActive(items);
+      } else if (e.key === 'ArrowUp') {
+        currentFocus--;
+        addActive(items);
+      } else if (e.key === 'Enter') {
+        if (currentFocus > -1 && items[currentFocus]) {
+          e.preventDefault();
+          items[currentFocus].click();
+        }
+      } else if (e.key === 'Escape') {
+        hideSuggestions();
+      }
+    });
+
+    function addActive(items) {
+      if (!items || items.length === 0) return;
+      removeActive(items);
+
+      if (currentFocus >= items.length) currentFocus = 0;
+      if (currentFocus < 0) currentFocus = items.length - 1;
+
+      items[currentFocus].classList.add('selected');
+      searchInput.value = items[currentFocus].querySelector('span').textContent;
+    }
+
+    function removeActive(items) {
+      for (let i = 0; i < items.length; i++) {
+        items[i].classList.remove('selected');
+      }
+    }
+
+    // Sembunyikan rekomendasi jika klik di luar area pencarian
+    document.addEventListener('click', (e) => {
+      if (!searchContainer.contains(e.target)) {
+        hideSuggestions();
+      }
+    });
+
+    // FUNGSI SUBMIT PENCARIAN
+    function submitSearch(query) {
+      if (!query) return;
+      
+      if (/^(http:\/\/|https:\/\/)/.test(query)) {
+        window.location.href = query;
+      } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
+        window.location.href = 'https://' + query;
+      } else {
+        searchForm.submit();
+      }
+    }
+
     searchForm.addEventListener('submit', (e) => {
       const query = searchInput.value.trim();
       if (!query) {
         e.preventDefault();
         return;
       }
-      if (/^(http:\/\/|https:\/\/)/.test(query)) {
+      if (/^(http:\/\/|https:\/\/)/.test(query) || /^[\w-]+(\.[\w-]+)+/.test(query)) {
         e.preventDefault();
-        window.location.href = query;
-      } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
-        e.preventDefault();
-        window.location.href = 'https://' + query;
+        submitSearch(query);
       }
     });
 
     document.getElementById('search-submit').addEventListener('click', () => {
-      if(searchInput.value.trim() !== '') searchForm.submit();
+      if (searchInput.value.trim() !== '') submitSearch(searchInput.value.trim());
     });
 
     document.getElementById('ai-btn').addEventListener('click', () => {
