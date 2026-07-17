@@ -516,7 +516,45 @@
     }
 
     // Event saat mengetik & navigasi tombol keyboard (Panah & Enter)
-    searchInput.addEventListener('input', (e) => fetchSuggestions(e.target.value));
+    // --- FUNGSI DEBOUNCE ---
+    function debounce(func, delay) {
+      let timeoutId;
+      return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func.apply(this, args);
+        }, delay);
+      };
+    }
+
+    const debouncedFetchSuggestions = debounce((query) => {
+      fetchSuggestions(query);
+    }, 300);
+
+    // Event saat mengetik (menggunakan Debounce)
+    searchInput.addEventListener('input', (e) => {
+      debouncedFetchSuggestions(e.target.value);
+    });
+
+    // Event navigasi tombol keyboard (Panah & Enter)
+    searchInput.addEventListener('keydown', (e) => {
+      const items = suggestionsBox.getElementsByClassName('suggestion-item');
+      
+      if (e.key === 'ArrowDown') {
+        currentFocus++;
+        addActive(items);
+      } else if (e.key === 'ArrowUp') {
+        currentFocus--;
+        addActive(items);
+      } else if (e.key === 'Enter') {
+        if (currentFocus > -1 && items[currentFocus]) {
+          e.preventDefault();
+          items[currentFocus].click();
+        }
+      } else if (e.key === 'Escape') {
+        hideSuggestions();
+      }
+    });
 
     searchInput.addEventListener('keydown', (e) => {
       const items = suggestionsBox.getElementsByClassName('suggestion-item');
