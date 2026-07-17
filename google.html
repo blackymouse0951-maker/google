@@ -160,13 +160,16 @@
     /* KOTAK SEARCH & APPS */
     .pop-content {
       position: absolute;
-      top: 100px;
+      top: 25px;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
+    /* Menurunkan khusus wadah/bantalan aplikasi saja */
+    #apps-container {
+      top: 100px; /* Atur nilai ini sesuai tingkat penurunan yang kamu mau */
+    }
     .pop-content.active {
       opacity: 1;
       visibility: visible;
