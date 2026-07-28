@@ -568,6 +568,22 @@
     function typeEffect() {
       const currentWord = words[wordIndex];
 
+      const googleLogo = document.getElementById("google-logo");
+
+// Panggil fungsi ini jika ingin menampilkan logo beserta animasinya
+function showGoogleLogo() {
+  if (googleLogo) {
+    googleLogo.classList.add("show");
+  }
+}
+
+// Panggil fungsi ini jika ingin menyembunyikan logo
+function hideGoogleLogo() {
+  if (googleLogo) {
+    googleLogo.classList.remove("show");
+  }
+}
+
       if (isDeleting) {
         charIndex--;
         typingElement.textContent = currentWord.substring(0, charIndex);
