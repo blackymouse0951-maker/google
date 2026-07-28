@@ -565,6 +565,10 @@
     function typeEffect() {
       const currentWord = words[wordIndex];
 
+      if (currentWord === "Google Search & AI") {
+        googleLogo.classList.add("show");
+      }
+
       if (isDeleting) {
         charIndex--;
         typingElement.textContent = currentWord.substring(0, charIndex);
