@@ -560,45 +560,63 @@
     const searchBar = document.querySelector(".search-bar");
     let currentFocus = -1;
 
-    function typeEffect() {
-      const currentWord = words[wordIndex];
+   // =========================================================
+// ATUR DURASI TAMPIL LOGO DI SINI (dalam milidetik: 1000 = 1 detik)
+// =========================================================
+const WAKTU_DIAM_BERSAMA = 3000; // Teks & Logo diam bareng sebelum teks dihapus (3 detik)
+const WAKTU_LOGO_BERTAHAN = 4000; // Logo TETAP TAMPIL sendirian setelah teks terhapus (4 detik)
+// =========================================================
 
-      if (isDeleting) {
-        charIndex--;
-        typingElement.textContent = currentWord.substring(0, charIndex);
-      } else {
-        charIndex++;
-        typingElement.textContent = currentWord.substring(0, charIndex);
-      }
+function typeEffect() {
+  const currentWord = words[wordIndex];
 
-      let typeSpeed = isDeleting ? 40 : 80;
+  if (isDeleting) {
+    charIndex--;
+    typingElement.textContent = currentWord.substring(0, charIndex);
+  } else {
+    charIndex++;
+    typingElement.textContent = currentWord.substring(0, charIndex);
+  }
 
-      // KONTROL ALUR ANIMASI MUNCUL DAN HILANG
-      if (!isDeleting && charIndex === currentWord.length) {
-        if (wordIndex === 2) { 
-          // 1. Munculkan logo Google saat kalimat ketiga selesai diketik
-          googleLogo.classList.add("show");
+  let typeSpeed = isDeleting ? 40 : 80;
 
-          // 2. Diam sejenak selama 5 detik
-          typeSpeed = 8000; 
-        } else {
-          googleLogo.classList.remove("show");
-          typeSpeed = 16000;
-        }
+  // 1. SAAT TEKS SELESAI DIKETIK
+  if (!isDeleting && charIndex === currentWord.length) {
+    if (wordIndex === 2) { 
+      googleLogo.classList.add("show"); // Munculkan logo Google
+      typeSpeed = WAKTU_DIAM_BERSAMA;   // Diam sejenak lalu teks mulai dihapus
+    } else {
+      googleLogo.classList.remove("show");
+      typeSpeed = 2000;
+    }
+    
+    isDeleting = true;
+
+  // 2. SAAT TEKS SUDAH HABIS TERHAPUS
+  } else if (isDeleting && charIndex === 0) {
+    if (wordIndex === 2) {
+      // Teks sudah hilang, TAPI logo TETAP TAMPIL sendirian selama WAKTU_LOGO_BERTAHAN
+      setTimeout(() => {
+        googleLogo.classList.remove("show"); // Baru hilangkan logo di sini
         
-        isDeleting = true; // Mulai fase penghapusan teks
-      } else if (isDeleting && charIndex === 0) {
-        // 3. Teks "Google Search & AI" SUDAH HABIS TERHAPUS DULUAN,
-        // BARU KEMUDIAN logo Google disembunyikan
-        googleLogo.classList.remove("show");
-
+        // Pindah ke kalimat pertama setelah logo hilang
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 500;
-      }
+        setTimeout(typeEffect, 500); 
 
-      setTimeout(typeEffect, typeSpeed);
+      }, WAKTU_LOGO_BERTAHAN);
+
+      return; // Stop dulu pemanggilan typeEffect otomatis agar jedanya ditangani setTimeout di atas
+    } else {
+      googleLogo.classList.remove("show");
+      isDeleting = false;
+      wordIndex = (wordIndex + 1) % words.length;
+      typeSpeed = 500;
     }
+  }
+
+  setTimeout(typeEffect, typeSpeed);
+}
 
     typeEffect();
 
