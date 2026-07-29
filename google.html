@@ -59,6 +59,112 @@
       padding: 20px;
     }
 
+    /* --- STYLE UNTUK LOGO GOOGLE --- */
+    .google-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      user-select: none;
+      white-space: nowrap;
+      margin-bottom: -10px;
+    }
+
+    .item {
+      opacity: 0;
+      display: inline-block;
+      will-change: transform, opacity;
+      animation: smoothBounceIn 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes smoothBounceIn {
+      0% {
+        transform: translateX(120vw) translateY(0) scale(0.98);
+        opacity: 0;
+      }
+      55% {
+        transform: translateX(12vw) translateY(-18px) scale(1);
+        opacity: 1;
+      }
+      72% {
+        transform: translateX(6vw) translateY(6px);
+      }
+      86% {
+        transform: translateX(2vw) translateY(-4px);
+      }
+      100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .g-left, .g-right {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 100px; /* Ukuran disesuaikan agar pas di atas teks */
+      font-weight: 700;
+      color: #d7d7d7;
+      text-shadow:
+        0 2px 0 #8f8f8f,
+        -2px -1px 0 #ffffff,
+        1px 1px 2px rgba(0, 0, 0, 0.35);
+      letter-spacing: -6px;
+      display: inline-block;
+    }
+
+    .g-left {
+      margin-right: -6px;
+      animation-delay: 0.00s;
+    }
+
+    .logo-argentina {
+      width: 52px;
+      height: 68px;
+      margin: 0 -8px 0 4px;
+      top: 5px;
+      transform: scale(1.08);
+      animation-delay: 0.25s;
+    }
+
+    .logo-spanyol {
+      width: 52px;
+      height: 68px;
+      margin: 0 -5px 0 -5px;
+      top: -9px;
+      transform: scale(1.08);
+      animation-delay: 0.50s;
+    }
+
+    .logo-france {
+      width: 56px;
+      height: 72px;
+      margin: 0 -8px 0 -11px;
+      top: 5px;
+      transform: scale(1.08);
+      animation-delay: 0.75s;
+    }
+
+    .logo-england {
+      width: 66px;
+      height: 83px;
+      margin: 0 -7px 0 -13px;
+      top: -9px;
+      transform: scale(1.08);
+      animation-delay: 1s;
+    }
+
+    .g-right {
+      margin-left: -6px;
+      animation-delay: 1.25s;
+    }
+
+    .team-logo {
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* --- AKHIR STYLE LOGO GOOGLE --- */
+
     .animated-text-container {
       min-height: 85px;
       display: flex;
@@ -326,18 +432,43 @@
         white-space: normal;
         border-right-width: 2px;
       }
+
+      .g-left, .g-right {
+        font-size: 60px;
+      }
+
+      .logo-argentina, .logo-spanyol, .logo-france {
+        width: 32px;
+        height: 42px;
+      }
+
+      .logo-england {
+        width: 40px;
+        height: 52px;
+      }
     }
   </style>
 </head>
 <body>
 
   <video class="bg-video" autoplay loop muted playsinline preload="auto">
-  <source src="Video pxm.mov" type="video/mp4">
-</video>
+    <source src="Video pxm.mov" type="video/mp4">
+  </video>
 
   <div class="bg-overlay"></div>
 
   <div class="main-container">
+    
+    <!-- ELEMEN LOGO GOOGLE DI ATAS KALIMAT -->
+    <div class="google-logo">
+      <span class="item g-left">G</span>
+      <img class="item team-logo logo-argentina" src="Logo Argentina.png" alt="Argentina"/>
+      <img class="item team-logo logo-spanyol" src="Logo Spayol.png" alt="Spanyol"/>
+      <img class="item team-logo logo-france" src="Logo France.png" alt="France"/>
+      <img class="item team-logo logo-england" src="Logo Inggris.png" alt="England"/>
+      <span class="item g-right">e</span>
+    </div>
+
     <div class="animated-text-container">
       <span class="animated-text" id="typing-text"></span>
     </div>
