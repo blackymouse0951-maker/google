@@ -65,7 +65,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 15px; /* Jarak antara teks dan logo */
+      gap: 15px;
       flex-wrap: nowrap;
     }
 
@@ -100,9 +100,9 @@
       100% { background-position: 0% 50%; border-color: #ffffff; }
     }
 
-    /* STYLE UNTUK LOGO GOOGLE (SEJAJAR TEKS) */
+    /* CONTAINER LOGO GOOGLE */
     .google-logo {
-      display: none; /* Sembunyi secara default, akan diaktifkan lewat JS */
+      display: none;
       align-items: center;
       justify-content: center;
       line-height: 1;
@@ -111,16 +111,10 @@
     }
 
     .google-logo.show {
-      display: flex; /* Muncul saat class 'show' ditambah oleh JS */
+      display: flex;
     }
 
-    .item {
-      opacity: 0;
-      display: inline-block;
-      will-change: transform, opacity;
-      animation: smoothBounceIn 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
+    /* ANIMASI MASUK (BOUNCE) & OMBAK (WAVE FLOAT) */
     @keyframes smoothBounceIn {
       0% {
         transform: translateX(120vw) translateY(0) scale(0.98);
@@ -142,7 +136,37 @@
       }
     }
 
-    /* Ukuran disesuaikan agar sejajar dan seimbang dengan tinggi font teks */
+    @keyframes waveFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px); /* Gerakan ombak naik */
+      }
+    }
+
+    .item {
+      opacity: 0;
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    /* Kombinasi Animasi Masuk + Ombak Berulang */
+    .google-logo.show .item {
+      animation: 
+        smoothBounceIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+        waveFloat 2.2s ease-in-out infinite 1.8s;
+    }
+
+    /* Delay Ombak Bertingkat untuk Efek Gelombang Berurutan */
+    .google-logo.show .g-left         { animation-delay: 0.00s, 1.80s; }
+    .google-logo.show .logo-argentina { animation-delay: 0.15s, 1.95s; }
+    .google-logo.show .logo-spanyol   { animation-delay: 0.30s, 2.10s; }
+    .google-logo.show .logo-france    { animation-delay: 0.45s, 2.25s; }
+    .google-logo.show .logo-england   { animation-delay: 0.60s, 2.40s; }
+    .google-logo.show .g-right        { animation-delay: 0.75s, 2.55s; }
+
+    /* UKURAN HURUF & LOGO */
     .g-left, .g-right {
       font-family: Arial, Helvetica, sans-serif;
       font-size: 45px;
@@ -156,9 +180,13 @@
       display: inline-block;
     }
 
-    .g-left {
-      margin-right: -3px;
-      animation-delay: 0.00s;
+    .g-left { margin-right: -3px; }
+    .g-right { margin-left: -3px; }
+
+    .team-logo {
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
     }
 
     .logo-argentina {
@@ -167,7 +195,6 @@
       margin: 0 -4px 0 2px;
       top: 2px;
       transform: scale(1.08);
-      animation-delay: 0.25s;
     }
 
     .logo-spanyol {
@@ -176,7 +203,6 @@
       margin: 0 -3px 0 -3px;
       top: -4px;
       transform: scale(1.08);
-      animation-delay: 0.50s;
     }
 
     .logo-france {
@@ -185,7 +211,6 @@
       margin: 0 -4px 0 -5px;
       top: 2px;
       transform: scale(1.08);
-      animation-delay: 0.75s;
     }
 
     .logo-england {
@@ -194,18 +219,6 @@
       margin: 0 -4px 0 -6px;
       top: -4px;
       transform: scale(1.08);
-      animation-delay: 1s;
-    }
-
-    .g-right {
-      margin-left: -3px;
-      animation-delay: 1.25s;
-    }
-
-    .team-logo {
-      object-fit: contain;
-      position: relative;
-      z-index: 2;
     }
 
     /* TOMBOL DAN DOCK */
@@ -381,7 +394,7 @@
       padding: 15px 22px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 210px
+      margin-top: 210px;
     }
 
     .app-item {
@@ -432,14 +445,13 @@
 
   <div class="main-container">
     
-    <!-- WRAPPER SEJAJAR DENGAN LOGO DI DALAMNYA -->
     <div class="animated-text-container">
       <span class="animated-text" id="typing-text"></span>
 
       <div class="google-logo" id="google-logo">
         <span class="item g-left">G</span>
         <img class="item team-logo logo-argentina" src="Logo Argentina.png" alt="Argentina"/>
-        <img class="item team-logo logo-spanyol" src="Logo Spayol.png" alt="Spanyol"/>
+        <img class="item team-logo logo-spanyol" src="Logo Spanyol.png" alt="Spanyol"/>
         <img class="item team-logo logo-france" src="Logo France.png" alt="France"/>
         <img class="item team-logo logo-england" src="Logo Inggris.png" alt="England"/>
         <span class="item g-right">e</span>
@@ -561,22 +573,29 @@
 
       let typeSpeed = isDeleting ? 40 : 80;
 
-      // KONTROL MUNCULNYA LOGO GOOGLE
+      // LOGIKA WAKTU TAMPIL LOGO GOOGLE
       if (!isDeleting && charIndex === currentWord.length) {
-        // Jika kalimat ketiga ("Google Search & AI") selesai diketik
-        if (wordIndex === 2) {
-          googleLogo.classList.add("show"); // Tampilkan logo Google
-        } else {
-          googleLogo.classList.remove("show"); // Sembunyikan untuk teks lainnya
-        }
+        if (wordIndex === 2) { 
+          // Saat "Google Search & AI" selesai diketik
+          googleLogo.classList.add("show");
 
-        typeSpeed = 6000;
+          // Tahan logo & efek ombak selama 5.5 detik di layar
+          setTimeout(() => {
+            googleLogo.classList.remove("show");
+          }, 5500);
+
+          typeSpeed = 6500; // Teks diam total 6.5 detik sebelum diketik mundur/dihapus
+        } else {
+          googleLogo.classList.remove("show");
+          typeSpeed = 3000;
+        }
+        
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
-        googleLogo.classList.remove("show"); // Sembunyikan saat mulai hapus teks
+        googleLogo.classList.remove("show");
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 600;
+        typeSpeed = 500;
       }
 
       setTimeout(typeEffect, typeSpeed);
