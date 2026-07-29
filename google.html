@@ -164,15 +164,15 @@
     }
 
     /* Delay Ombak Bertingkat */
-    .google-logo.show .g-left         { animation-delay: 0.00s, 1.80s; }
+    .google-logo.show .g-left1         { animation-delay: 0.00s, 1.80s; }
     .google-logo.show .logo-argentina { animation-delay: 0.15s, 1.95s; }
     .google-logo.show .logo-spanyol   { animation-delay: 0.30s, 2.10s; }
-    .google-logo.show .logo-france    { animation-delay: 0.45s, 2.25s; }
-    .google-logo.show .logo-england   { animation-delay: 0.60s, 2.40s; }
-    .google-logo.show .g-right        { animation-delay: 0.75s, 2.55s; }
+    .google-logo.show .g-letter-o     { animation-delay: 0.45s, 2.25s; }
+    .google-logo.show .g-letter-l     { animation-delay: 0.60s, 2.40s; }
+    .google-logo.show .g-right1       { animation-delay: 0.75s, 2.55s; }
 
-    /* UKURAN HURUF & LOGO BENDERA (Ditingkatkan) */
-    .g-left, .g-right {
+    /* UKURAN HURUF GOOGLE */
+    .g-left1, .g-right1, .g-text-letter {
       font-family: Arial, Helvetica, sans-serif;
       font-size: 60px;
       font-weight: 700;
@@ -181,12 +181,9 @@
         0 2px 0 #8f8f8f,
         -2px -1px 0 #ffffff,
         1px 1px 2px rgba(0, 0, 0, 0.35);
-      letter-spacing: -3px;
+      letter-spacing: -2px;
       display: inline-block;
     }
-
-    .g-left { margin-right: -3px; }
-    .g-right { margin-left: -3px; }
 
     .team-logo {
       object-fit: contain;
@@ -206,22 +203,6 @@
       width: 34px;
       height: 44px;
       margin: 0 -3px 0 -3px;
-      top: -4px;
-      transform: scale(1.08);
-    }
-
-    .logo-france {
-      width: 36px;
-      height: 46px;
-      margin: 0 -4px 0 -5px;
-      top: 2px;
-      transform: scale(1.08);
-    }
-
-    .logo-england {
-      width: 42px;
-      height: 52px;
-      margin: 0 -4px 0 -6px;
       top: -4px;
       transform: scale(1.08);
     }
@@ -453,13 +434,14 @@
     <div class="animated-text-container">
       <span class="animated-text" id="typing-text"></span>
 
+      <!-- LOGO GOOGLE (Diperbarui) -->
       <div class="google-logo" id="google-logo">
-        <span class="item g-left">G</span>
+        <span class="item g-left1">G</span>
         <img class="item team-logo logo-argentina" src="Logo Argentina.png" alt="Argentina"/>
         <img class="item team-logo logo-spanyol" src="Logo Spayol.png" alt="Spanyol"/>
-        <span><img class="item team-logo logo-france">o</span>
-        <span><img class="item team-logo logo-england">l</span>
-        <span class="item g-right">e</span>
+        <span class="item g-text-letter g-letter-o">o</span>
+        <span class="item g-text-letter g-letter-l">l</span>
+        <span class="item g-right1">e</span>
       </div>
     </div>
 
