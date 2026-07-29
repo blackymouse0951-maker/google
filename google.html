@@ -108,10 +108,16 @@
       line-height: 1;
       user-select: none;
       white-space: nowrap;
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* Transisi halus saat membesar */
     }
 
     .google-logo.show {
       display: flex;
+    }
+
+    /* CLASS TAMBAHAN SAAT TEKS HABIS: LOGO MEMBESAR DI TENGAH */
+    .google-logo.center-zoom {
+      transform: scale(1.4); /* Mengubah ukuran logo menjadi 1.4x lebih besar */
     }
 
     /* ANIMASI MASUK (BOUNCE) & OMBAK (WAVE FLOAT) */
@@ -543,10 +549,14 @@
   </div>
 
   <script>
-    const words = ["Welcome Firman!", "What are you looking for today?", "Powered by"];
+    const words = ["Welcome Firman!", "What are you looking for today?", "Search & explore with"];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
+
+    // ATUR DURASI DI SINI (1000 = 1 detik)
+    const WAKTU_DIAM_BERSAMA = 2500;  // Diam bareng sebelum teks dihapus
+    const WAKTU_LOGO_MEMBESAR = 3500; // Berapa lama logo membesAR & diam sendirian di tengah
 
     const typingElement = document.getElementById("typing-text");
     const googleLogo = document.getElementById("google-logo");
@@ -560,63 +570,57 @@
     const searchBar = document.querySelector(".search-bar");
     let currentFocus = -1;
 
-   // =========================================================
-// ATUR DURASI TAMPIL LOGO DI SINI (dalam milidetik: 1000 = 1 detik)
-// =========================================================
-const WAKTU_DIAM_BERSAMA = 3000; // Teks & Logo diam bareng sebelum teks dihapus (3 detik)
-const WAKTU_LOGO_BERTAHAN = 4000; // Logo TETAP TAMPIL sendirian setelah teks terhapus (4 detik)
-// =========================================================
+    function typeEffect() {
+      const currentWord = words[wordIndex];
 
-function typeEffect() {
-  const currentWord = words[wordIndex];
+      if (isDeleting) {
+        charIndex--;
+        typingElement.textContent = currentWord.substring(0, charIndex);
+      } else {
+        charIndex++;
+        typingElement.textContent = currentWord.substring(0, charIndex);
+      }
 
-  if (isDeleting) {
-    charIndex--;
-    typingElement.textContent = currentWord.substring(0, charIndex);
-  } else {
-    charIndex++;
-    typingElement.textContent = currentWord.substring(0, charIndex);
-  }
+      let typeSpeed = isDeleting ? 40 : 80;
 
-  let typeSpeed = isDeleting ? 40 : 80;
-
-  // 1. SAAT TEKS SELESAI DIKETIK
-  if (!isDeleting && charIndex === currentWord.length) {
-    if (wordIndex === 2) { 
-      googleLogo.classList.add("show"); // Munculkan logo Google
-      typeSpeed = WAKTU_DIAM_BERSAMA;   // Diam sejenak lalu teks mulai dihapus
-    } else {
-      googleLogo.classList.remove("show");
-      typeSpeed = 2000;
-    }
-    
-    isDeleting = true;
-
-  // 2. SAAT TEKS SUDAH HABIS TERHAPUS
-  } else if (isDeleting && charIndex === 0) {
-    if (wordIndex === 2) {
-      // Teks sudah hilang, TAPI logo TETAP TAMPIL sendirian selama WAKTU_LOGO_BERTAHAN
-      setTimeout(() => {
-        googleLogo.classList.remove("show"); // Baru hilangkan logo di sini
+      if (!isDeleting && charIndex === currentWord.length) {
+        if (wordIndex === 2) { 
+          googleLogo.classList.add("show");
+          googleLogo.classList.remove("center-zoom"); // Reset ukuran normal saat muncul
+          typeSpeed = WAKTU_DIAM_BERSAMA;
+        } else {
+          googleLogo.classList.remove("show");
+          typeSpeed = 2000;
+        }
         
-        // Pindah ke kalimat pertama setelah logo hilang
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
-        setTimeout(typeEffect, 500); 
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        if (wordIndex === 2) {
+          // SAAT TEKS SUDAH HABIS TERHAPUS: 
+          // Logo otomatis membesar (zoom) di tengah dan berombak sendirian
+          googleLogo.classList.add("center-zoom");
 
-      }, WAKTU_LOGO_BERTAHAN);
+          setTimeout(() => {
+            googleLogo.classList.remove("show");
+            googleLogo.classList.remove("center-zoom");
+            
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            setTimeout(typeEffect, 500);
 
-      return; // Stop dulu pemanggilan typeEffect otomatis agar jedanya ditangani setTimeout di atas
-    } else {
-      googleLogo.classList.remove("show");
-      isDeleting = false;
-      wordIndex = (wordIndex + 1) % words.length;
-      typeSpeed = 500;
+          }, WAKTU_LOGO_MEMBESAR);
+
+          return; // Hentikan loop sementara sampai timeout selesai
+        } else {
+          googleLogo.classList.remove("show");
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          typeSpeed = 500;
+        }
+      }
+
+      setTimeout(typeEffect, typeSpeed);
     }
-  }
-
-  setTimeout(typeEffect, typeSpeed);
-}
 
     typeEffect();
 
