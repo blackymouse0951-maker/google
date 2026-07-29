@@ -141,7 +141,7 @@
         transform: translateY(0px);
       }
       50% {
-        transform: translateY(-8px); /* Gerakan ombak naik */
+        transform: translateY(-8px);
       }
     }
 
@@ -158,7 +158,7 @@
         waveFloat 2.2s ease-in-out infinite 1.8s;
     }
 
-    /* Delay Ombak Bertingkat untuk Efek Gelombang Berurutan */
+    /* Delay Ombak Bertingkat */
     .google-logo.show .g-left         { animation-delay: 0.00s, 1.80s; }
     .google-logo.show .logo-argentina { animation-delay: 0.15s, 1.95s; }
     .google-logo.show .logo-spanyol   { animation-delay: 0.30s, 2.10s; }
@@ -573,26 +573,25 @@
 
       let typeSpeed = isDeleting ? 40 : 80;
 
-      // LOGIKA WAKTU TAMPIL LOGO GOOGLE
+      // KONTROL ALUR ANIMASI MUNCUL DAN HILANG
       if (!isDeleting && charIndex === currentWord.length) {
         if (wordIndex === 2) { 
-          // Saat "Google Search & AI" selesai diketik
+          // 1. Munculkan logo Google saat kalimat ketiga selesai diketik
           googleLogo.classList.add("show");
 
-          // Tahan logo & efek ombak selama 5.5 detik di layar
-          setTimeout(() => {
-            googleLogo.classList.remove("show");
-          }, 5500);
-
-          typeSpeed = 6500; // Teks diam total 6.5 detik sebelum diketik mundur/dihapus
+          // 2. Diam sejenak selama 5 detik
+          typeSpeed = 5000; 
         } else {
           googleLogo.classList.remove("show");
           typeSpeed = 3000;
         }
         
-        isDeleting = true;
+        isDeleting = true; // Mulai fase penghapusan teks
       } else if (isDeleting && charIndex === 0) {
+        // 3. Teks "Google Search & AI" SUDAH HABIS TERHAPUS DULUAN,
+        // BARU KEMUDIAN logo Google disembunyikan
         googleLogo.classList.remove("show");
+
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
         typeSpeed = 500;
