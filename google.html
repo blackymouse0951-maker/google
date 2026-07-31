@@ -96,23 +96,26 @@
       transition: all 0.3s ease;
     }
 
-    /* Efek Glitch Warna-warni untuk "Powered by" */
+    /* Animasi Gelombang 3D Bounce */
 .animated-text.powered-mode {
-  color: #fff;
-  position: relative;
-  text-shadow: 2px 0 #ff0055, -2px 0 #00ffff;
-  animation: glitch 0.4s infinite alternate;
+  background: linear-gradient(90deg, #e600e6, #8a00e6, #0066ff, #00e6e6, #e600e6);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveFlip 1.5s ease-in-out infinite alternate, colorMove 3s linear infinite;
 }
 
-@keyframes glitch {
-  0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ffff; transform: translate(0); }
-  20% { text-shadow: -2px 0 #ff0055, 2px 0 #00ffff; transform: translate(-2px, 1px); }
-  40% { text-shadow: 2px 0 #00ff66, -2px 0 #ff9900; transform: translate(2px, -1px); }
-  60% { text-shadow: -2px 0 #9933ff, 2px 0 #00ffff; transform: translate(0); }
-  80% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff66; transform: translate(1px, 2px); }
-  100% { text-shadow: -2px 0 #00ffff, 2px 0 #ff9900; transform: translate(0); }
+@keyframes waveFlip {
+  0% { transform: translateY(0) rotateX(0deg); }
+  50% { transform: translateY(-10px) rotateX(15deg); }
+  100% { transform: translateY(0) rotateX(0deg); }
 }
 
+@keyframes colorMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+    
     /* CONTAINER LOGO GOOGLE */
     .google-logo {
       display: none;
