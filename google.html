@@ -67,6 +67,7 @@
       justify-content: center;
       gap: 15px;
       flex-wrap: nowrap;
+      perspective: 1000px; /* Menambah efek kedalaman 3D */
     }
 
     /* TEKS KETIK UMUM */
@@ -96,26 +97,52 @@
       transition: all 0.3s ease;
     }
 
-    /* Animasi Gelombang 3D Bounce */
-.animated-text.powered-mode {
-  background: linear-gradient(90deg, #e600e6, #8a00e6, #0066ff, #00e6e6, #e600e6);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: waveFlip 1.5s ease-in-out infinite alternate, colorMove 3s linear infinite;
-}
+    /* =========================================================
+       ✨ NO 2: MODUL WAVE / LETTER FLIP (3D BOUNCE & COLOR MOVE)
+       ========================================================= */
+    .animated-text.powered-mode {
+      background: linear-gradient(
+        90deg, 
+        #ff007f, 
+        #9900ff, 
+        #00d4ff, 
+        #00ff88, 
+        #ffcc00, 
+        #ff007f
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: 
+        waveFlip 1.6s ease-in-out infinite alternate, 
+        colorMove 3s linear infinite;
+      display: inline-block;
+      filter: drop-shadow(0 4px 10px rgba(0, 212, 255, 0.3));
+    }
 
-@keyframes waveFlip {
-  0% { transform: translateY(0) rotateX(0deg); }
-  50% { transform: translateY(-10px) rotateX(15deg); }
-  100% { transform: translateY(0) rotateX(0deg); }
-}
+    @keyframes waveFlip {
+      0% { 
+        transform: translateY(0) rotateX(0deg); 
+      }
+      50% { 
+        transform: translateY(-12px) rotateX(20deg); 
+      }
+      100% { 
+        transform: translateY(0) rotateX(0deg); 
+      }
+    }
 
-@keyframes colorMove {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-    
+    @keyframes colorMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    @keyframes rgb-shift {
+      0% { background-position: 0% 50%; border-color: #ffffff; }
+      50% { background-position: 100% 50%; border-color: transparent; }
+      100% { background-position: 0% 50%; border-color: #ffffff; }
+    }
+
     /* CONTAINER LOGO GOOGLE */
     .google-logo {
       display: none;
@@ -193,7 +220,7 @@
       display: inline-block;
     }
 
-    /* TEKS GOOGLE AI WARNA PUTIH DENGAN ANIMASI POP & GLOW */
+    /* TEKS GOOGLE AI WARNA PUTIH DENGAN EFEK GLOW BERCAHAYA */
     .ai-brand-text {
       display: none;
       font-size: clamp(28px, 4vw, 42px);
@@ -467,7 +494,7 @@
         <span class="item g-text-letter g-letter-e">e</span>
       </div>
 
-      <!-- TEKS GOOGLE AI (WARNA PUTIH BERCANGGIH) -->
+      <!-- TEKS GOOGLE AI (WARNA PUTIH) -->
       <div class="ai-brand-text" id="ai-brand-text">Google AI</div>
     </div>
 
@@ -588,7 +615,7 @@
     function typeEffect() {
       const currentWord = words[wordIndex];
 
-      // Terapkan/Lepas style khusus untuk "Powered by"
+      // Terapkan/Lepas style khusus Wave Flip untuk "Powered by"
       if (wordIndex === 3) {
         typingElement.classList.add("powered-mode");
       } else {
