@@ -580,260 +580,274 @@
   </div>
 
   <script>
-    const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Powered by"];
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+  const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Powered by"];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
 
-    // =========================================================
-    // ⏱️ PENGATURAN DURASI WAKTU
-    // =========================================================
-    const KECEPATAN_KETIK      = 80;   
-    const KECEPATAN_HAPUS      = 40;   
-    
-    const DIAM_KALIMAT_1_DAN_2 = 6000; 
-    const DIAM_BERSAMA_LOGO    = 6000; 
-    const LOGO_ZOOM_SENDIRIAN  = 6000; 
-    // =========================================================
+  // =========================================================
+  // ⏱️ PENGATURAN DURASI WAKTU
+  // =========================================================
+  const KECEPATAN_KETIK      = 80;   
+  const KECEPATAN_HAPUS      = 40;   
+  
+  const DIAM_KALIMAT_1_DAN_2 = 6000; 
+  const DIAM_BERSAMA_LOGO    = 6000; 
+  const LOGO_ZOOM_SENDIRIAN  = 6000; // Durasi Google AI diam di tengah
+  // =========================================================
 
-    const typingElement = document.getElementById("typing-text");
-    const googleLogo = document.getElementById("google-logo");
-    const aiBrandText = document.getElementById("ai-brand-text");
-    const btnSearchTrigger = document.getElementById("btn-search-trigger");
-    const btnAppsTrigger = document.getElementById("btn-apps-trigger");
-    const searchContainer = document.getElementById("search-container");
-    const appsContainer = document.getElementById("apps-container");
-    const searchInput = document.getElementById("search-input");
-    const searchForm = document.getElementById("search-form");
-    const suggestionsBox = document.getElementById("suggestions-box");
-    const searchBar = document.querySelector(".search-bar");
-    let currentFocus = -1;
+  const typingElement = document.getElementById("typing-text");
+  const googleLogo = document.getElementById("google-logo");
+  const aiBrandText = document.getElementById("ai-brand-text");
+  const btnSearchTrigger = document.getElementById("btn-search-trigger");
+  const btnAppsTrigger = document.getElementById("btn-apps-trigger");
+  const searchContainer = document.getElementById("search-container");
+  const appsContainer = document.getElementById("apps-container");
+  const searchInput = document.getElementById("search-input");
+  const searchForm = document.getElementById("search-form");
+  const suggestionsBox = document.getElementById("suggestions-box");
+  const searchBar = document.querySelector(".search-bar");
+  let currentFocus = -1;
 
-    function typeEffect() {
-      const currentWord = words[wordIndex];
+  function typeEffect() {
+    const currentWord = words[wordIndex];
 
-      // Terapkan/Lepas style khusus Pulse Glow untuk "Powered by"
-      if (wordIndex === 3) {
-        typingElement.classList.add("powered-mode");
+    // Terapkan/Lepas style khusus Pulse Glow untuk "Powered by"
+    if (wordIndex === 3) {
+      typingElement.classList.add("powered-mode");
+    } else {
+      typingElement.classList.remove("powered-mode");
+    }
+
+    if (isDeleting) {
+      charIndex--;
+      typingElement.textContent = currentWord.substring(0, charIndex);
+    } else {
+      charIndex++;
+      typingElement.textContent = currentWord.substring(0, charIndex);
+    }
+
+    let typeSpeed = isDeleting ? KECEPATAN_HAPUS : KECEPATAN_KETIK;
+
+    // --- SAAT TEKS SELESAI DIKETIK ---
+    if (!isDeleting && charIndex === currentWord.length) {
+      if (wordIndex === 2) { 
+        // "Start searching with" -> Tampilkan Logo Google
+        googleLogo.classList.add("show");
+        googleLogo.classList.remove("center-zoom"); 
+        aiBrandText.classList.remove("show");
+        typeSpeed = DIAM_BERSAMA_LOGO;
+      } else if (wordIndex === 3) {
+        // "Powered by" -> Tampilkan Teks Google AI
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.add("show");
+        typeSpeed = DIAM_BERSAMA_LOGO;
       } else {
-        typingElement.classList.remove("powered-mode");
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.remove("show");
+        typeSpeed = DIAM_KALIMAT_1_DAN_2;
       }
+      
+      isDeleting = true;
+    } 
+    // --- SAAT TEKS SELESAI DIHAPUS ---
+    else if (isDeleting && charIndex === 0) {
+      if (wordIndex === 2) {
+        // SAAT TEKS "Start searching with" TERHAPUS HABIS
+        googleLogo.classList.add("center-zoom");
 
-      if (isDeleting) {
-        charIndex--;
-        typingElement.textContent = currentWord.substring(0, charIndex);
-      } else {
-        charIndex++;
-        typingElement.textContent = currentWord.substring(0, charIndex);
-      }
-
-      let typeSpeed = isDeleting ? KECEPATAN_HAPUS : KECEPATAN_KETIK;
-
-      if (!isDeleting && charIndex === currentWord.length) {
-        if (wordIndex === 2) { 
-          // "Start searching with" -> Tampilkan Logo Google
-          googleLogo.classList.add("show");
-          googleLogo.classList.remove("center-zoom"); 
-          aiBrandText.classList.remove("show");
-          typeSpeed = DIAM_BERSAMA_LOGO;
-        } else if (wordIndex === 3) {
-          // "Powered by" -> Tampilkan Teks Google AI
+        setTimeout(() => {
           googleLogo.classList.remove("show");
-          aiBrandText.classList.add("show");
-          typeSpeed = DIAM_BERSAMA_LOGO;
-        } else {
-          googleLogo.classList.remove("show");
-          aiBrandText.classList.remove("show");
-          typeSpeed = DIAM_KALIMAT_1_DAN_2;
-        }
-        
-        isDeleting = true;
-      } else if (isDeleting && charIndex === 0) {
-        if (wordIndex === 2) {
-          // SAAT TEKS "Start searching with" TERHAPUS HABIS
-          googleLogo.classList.add("center-zoom");
-
-          setTimeout(() => {
-            googleLogo.classList.remove("show");
-            googleLogo.classList.remove("center-zoom");
-            
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            setTimeout(typeEffect, 500);
-
-          }, LOGO_ZOOM_SENDIRIAN);
-
-          return;
-        } else {
-          googleLogo.classList.remove("show");
-          aiBrandText.classList.remove("show");
+          googleLogo.classList.remove("center-zoom");
+          
           isDeleting = false;
           wordIndex = (wordIndex + 1) % words.length;
-          typeSpeed = 500;
-        }
-      }
+          setTimeout(typeEffect, 500);
+        }, LOGO_ZOOM_SENDIRIAN);
 
-      setTimeout(typeEffect, typeSpeed);
-    }
-
-    typeEffect();
-
-    window.handleSuggestions = function(data) {
-      const suggestions = data?.[1] || [];
-      if (suggestions.length > 0) showSuggestions(suggestions);
-      else hideSuggestions();
-    };
-
-    function fetchSuggestions(query) {
-      if (!query.trim()) {
-        hideSuggestions();
         return;
+      } else if (wordIndex === 3) {
+        // SAAT TEKS "Powered by" TERHAPUS HABIS
+        // Teks Google AI ditahan diam di tengah
+        setTimeout(() => {
+          aiBrandText.classList.remove("show");
+          
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length; // Kembali ke kata pertama
+          setTimeout(typeEffect, 500);
+        }, LOGO_ZOOM_SENDIRIAN);
+
+        return;
+      } else {
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.remove("show");
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        typeSpeed = 500;
       }
-
-      const oldScript = document.getElementById("jsonp-suggestions");
-      if (oldScript) oldScript.remove();
-
-      const script = document.createElement("script");
-      script.id = "jsonp-suggestions";
-      script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
-      document.body.appendChild(script);
     }
 
-    function showSuggestions(list) {
-      suggestionsBox.innerHTML = "";
-      currentFocus = -1;
+    setTimeout(typeEffect, typeSpeed);
+  }
 
-      list.slice(0, 6).forEach((text) => {
-        const item = document.createElement("div");
-        item.className = "suggestion-item";
-        item.innerHTML = `
-          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <span>${text}</span>
-        `;
+  typeEffect();
 
-        item.addEventListener("click", () => {
-          searchInput.value = text;
-          searchForm.submit();
-        });
+  window.handleSuggestions = function(data) {
+    const suggestions = data?.[1] || [];
+    if (suggestions.length > 0) showSuggestions(suggestions);
+    else hideSuggestions();
+  };
 
-        suggestionsBox.appendChild(item);
+  function fetchSuggestions(query) {
+    if (!query.trim()) {
+      hideSuggestions();
+      return;
+    }
+
+    const oldScript = document.getElementById("jsonp-suggestions");
+    if (oldScript) oldScript.remove();
+
+    const script = document.createElement("script");
+    script.id = "jsonp-suggestions";
+    script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+    document.body.appendChild(script);
+  }
+
+  function showSuggestions(list) {
+    suggestionsBox.innerHTML = "";
+    currentFocus = -1;
+
+    list.slice(0, 6).forEach((text) => {
+      const item = document.createElement("div");
+      item.className = "suggestion-item";
+      item.innerHTML = `
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>${text}</span>
+      `;
+
+      item.addEventListener("click", () => {
+        searchInput.value = text;
+        searchForm.submit();
       });
 
-      suggestionsBox.style.display = "block";
-      searchBar.classList.add("has-suggestions");
-    }
-
-    function hideSuggestions() {
-      suggestionsBox.style.display = "none";
-      suggestionsBox.innerHTML = "";
-      searchBar.classList.remove("has-suggestions");
-      currentFocus = -1;
-    }
-
-    function debounce(func, delay) {
-      let timeoutId;
-      return function (...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func.apply(this, args), delay);
-      };
-    }
-
-    const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
-
-    searchInput.addEventListener("input", (e) => {
-      debouncedFetchSuggestions(e.target.value);
+      suggestionsBox.appendChild(item);
     });
 
-    searchInput.addEventListener("keydown", (e) => {
-      const items = suggestionsBox.getElementsByClassName("suggestion-item");
+    suggestionsBox.style.display = "block";
+    searchBar.classList.add("has-suggestions");
+  }
 
-      if (e.key === "ArrowDown") {
+  function hideSuggestions() {
+    suggestionsBox.style.display = "none";
+    suggestionsBox.innerHTML = "";
+    searchBar.classList.remove("has-suggestions");
+    currentFocus = -1;
+  }
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
+
+  const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
+
+  searchInput.addEventListener("input", (e) => {
+    debouncedFetchSuggestions(e.target.value);
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
+    const items = suggestionsBox.getElementsByClassName("suggestion-item");
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      currentFocus++;
+      addActive(items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      currentFocus--;
+      addActive(items);
+    } else if (e.key === "Enter") {
+      if (currentFocus > -1 && items[currentFocus]) {
         e.preventDefault();
-        currentFocus++;
-        addActive(items);
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        currentFocus--;
-        addActive(items);
-      } else if (e.key === "Enter") {
-        if (currentFocus > -1 && items[currentFocus]) {
-          e.preventDefault();
-          items[currentFocus].click();
-        }
-      } else if (e.key === "Escape") {
-        hideSuggestions();
+        items[currentFocus].click();
       }
-    });
-
-    function addActive(items) {
-      if (!items || items.length === 0) return;
-      removeActive(items);
-
-      if (currentFocus >= items.length) currentFocus = 0;
-      if (currentFocus < 0) currentFocus = items.length - 1;
-
-      items[currentFocus].classList.add("selected");
-      searchInput.value = items[currentFocus].querySelector("span").textContent;
-    }
-
-    function removeActive(items) {
-      for (let i = 0; i < items.length; i++) {
-        items[i].classList.remove("selected");
-      }
-    }
-
-    document.addEventListener("click", (e) => {
-      if (!searchContainer.contains(e.target)) hideSuggestions();
-    });
-
-    btnSearchTrigger.addEventListener("mouseenter", () => {
-      searchContainer.classList.add("active");
-      appsContainer.classList.remove("active");
-      setTimeout(() => searchInput.focus(), 100);
-    });
-
-    btnAppsTrigger.addEventListener("mouseenter", () => {
-      appsContainer.classList.add("active");
-      searchContainer.classList.remove("active");
+    } else if (e.key === "Escape") {
       hideSuggestions();
-    });
+    }
+  });
 
-    searchContainer.addEventListener("mouseleave", () => {
-      if (document.activeElement !== searchInput && searchInput.value === "") {
-        searchContainer.classList.remove("active");
-      }
-    });
+  function addActive(items) {
+    if (!items || items.length === 0) return;
+    removeActive(items);
 
-    appsContainer.addEventListener("mouseleave", () => {
-      appsContainer.classList.remove("active");
-    });
+    if (currentFocus >= items.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = items.length - 1;
 
-    searchForm.addEventListener("submit", (e) => {
-      const query = searchInput.value.trim();
-      if (!query) {
-        e.preventDefault();
-        return;
-      }
+    items[currentFocus].classList.add("selected");
+    searchInput.value = items[currentFocus].querySelector("span").textContent;
+  }
 
-      if (/^(https?:\/\/)/i.test(query)) {
-        e.preventDefault();
-        window.location.href = query;
-      } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
-        e.preventDefault();
-        window.location.href = "https://" + query;
-      }
-    });
+  function removeActive(items) {
+    for (let i = 0; i < items.length; i++) {
+      items[i].classList.remove("selected");
+    }
+  }
 
-    document.getElementById("search-submit").addEventListener("click", () => {
-      if (searchInput.value.trim() !== "") searchForm.requestSubmit();
-    });
+  document.addEventListener("click", (e) => {
+    if (!searchContainer.contains(e.target)) hideSuggestions();
+  });
 
-    document.getElementById("ai-btn").addEventListener("click", () => {
-      const query = searchInput.value.trim();
-      window.location.href = query
-        ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
-        : "https://gemini.google.com/";
-    });
-  </script>
+  btnSearchTrigger.addEventListener("mouseenter", () => {
+    searchContainer.classList.add("active");
+    appsContainer.classList.remove("active");
+    setTimeout(() => searchInput.focus(), 100);
+  });
+
+  btnAppsTrigger.addEventListener("mouseenter", () => {
+    appsContainer.classList.add("active");
+    searchContainer.classList.remove("active");
+    hideSuggestions();
+  });
+
+  searchContainer.addEventListener("mouseleave", () => {
+    if (document.activeElement !== searchInput && searchInput.value === "") {
+      searchContainer.classList.remove("active");
+    }
+  });
+
+  appsContainer.addEventListener("mouseleave", () => {
+    appsContainer.classList.remove("active");
+  });
+
+  searchForm.addEventListener("submit", (e) => {
+    const query = searchInput.value.trim();
+    if (!query) {
+      e.preventDefault();
+      return;
+    }
+
+    if (/^(https?:\/\/)/i.test(query)) {
+      e.preventDefault();
+      window.location.href = query;
+    } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
+      e.preventDefault();
+      window.location.href = "https://" + query;
+    }
+  });
+
+  document.getElementById("search-submit").addEventListener("click", () => {
+    if (searchInput.value.trim() !== "") searchForm.requestSubmit();
+  });
+
+  document.getElementById("ai-btn").addEventListener("click", () => {
+    const query = searchInput.value.trim();
+    window.location.href = query
+      ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
+      : "https://gemini.google.com/";
+  });
+</script>
 </body>
 </html>
