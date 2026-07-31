@@ -163,16 +163,16 @@
         waveFloat 2.2s ease-in-out infinite 1.8s;
     }
 
-    /* Delay Ombak Bertingkat */
-    .google-logo.show .g-left1         { animation-delay: 0.00s, 1.80s; }
-    .google-logo.show .logo-argentina { animation-delay: 0.15s, 1.95s; }
-    .google-logo.show .logo-spanyol   { animation-delay: 0.30s, 2.10s; }
+    /* Delay Ombak Bertingkat untuk tiap huruf */
+    .google-logo.show .g-letter-cap-g { animation-delay: 0.00s, 1.80s; }
+    .google-logo.show .g-letter-o1    { animation-delay: 0.15s, 1.95s; }
+    .google-logo.show .g-letter-o2    { animation-delay: 0.30s, 2.10s; }
     .google-logo.show .g-letter-g     { animation-delay: 0.45s, 2.25s; }
     .google-logo.show .g-letter-l     { animation-delay: 0.60s, 2.40s; }
-    .google-logo.show .g-right1       { animation-delay: 0.75s, 2.55s; }
+    .google-logo.show .g-letter-e     { animation-delay: 0.75s, 2.55s; }
 
     /* UKURAN HURUF GOOGLE */
-    .g-left1, .g-right1, .g-text-letter {
+    .g-text-letter {
       font-family: Arial, Helvetica, sans-serif;
       font-size: 60px;
       font-weight: 700;
@@ -185,26 +185,32 @@
       display: inline-block;
     }
 
-    .team-logo {
-      object-fit: contain;
-      position: relative;
-      z-index: 2;
+    /* TEKS GOOGLE AI DENGAN GRADIENT SPESIAL */
+    .ai-brand-text {
+      display: none;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #4285f4, #9b51e0, #ea4335, #fbbc05, #34a853);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: ai-glow 3s ease infinite, popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
     }
 
-    .logo-argentina {
-      width: 34px;
-      height: 44px;
-      margin: 0 -4px 0 2px;
-      top: 2px;
-      transform: scale(1.08);
+    .ai-brand-text.show {
+      display: inline-block;
     }
 
-    .logo-spanyol {
-      width: 34px;
-      height: 44px;
-      margin: 0 -3px 0 -3px;
-      top: -4px;
-      transform: scale(1.08);
+    @keyframes ai-glow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     /* TOMBOL DAN DOCK */
@@ -434,15 +440,18 @@
     <div class="animated-text-container">
       <span class="animated-text" id="typing-text"></span>
 
-      <!-- LOGO GOOGLE (Diperbarui) -->
+      <!-- LOGO GOOGLE (Untuk "Start searching with") -->
       <div class="google-logo" id="google-logo">
-        <span class="item g-left1">G</span>
-        <img class="item team-logo logo-argentina" src="Logo Argentina.png" alt="Argentina"/>
-        <img class="item team-logo logo-spanyol" src="Logo Spayol.png" alt="Spanyol"/>
-        <span class="item g-text-letter g-letter-o">g</span>
+        <span class="item g-text-letter g-letter-cap-g">G</span>
+        <span class="item g-text-letter g-letter-o1">o</span>
+        <span class="item g-text-letter g-letter-o2">o</span>
+        <span class="item g-text-letter g-letter-g">g</span>
         <span class="item g-text-letter g-letter-l">l</span>
-        <span class="item g-right1">e</span>
+        <span class="item g-text-letter g-letter-e">e</span>
       </div>
+
+      <!-- TEKS GOOGLE AI (Untuk "Powered by") -->
+      <div class="ai-brand-text" id="ai-brand-text">Google AI</div>
     </div>
 
     <div class="button-group">
@@ -542,12 +551,13 @@
     const KECEPATAN_HAPUS      = 40;   // Kecepatan ngapus per huruf
     
     const DIAM_KALIMAT_1_DAN_2 = 6000; // Teks 1 & 2 diam di layar sebelum dihapus
-    const DIAM_BERSAMA_LOGO    = 6000; // Teks 3 & Logo diam bareng sebelum teks dihapus
+    const DIAM_BERSAMA_LOGO    = 6000; // Teks & Logo/AI diam bareng sebelum dihapus
     const LOGO_ZOOM_SENDIRIAN  = 6000; // Logo MEMBESAR sendirian di tengah setelah teks terhapus
     // =========================================================
 
     const typingElement = document.getElementById("typing-text");
     const googleLogo = document.getElementById("google-logo");
+    const aiBrandText = document.getElementById("ai-brand-text");
     const btnSearchTrigger = document.getElementById("btn-search-trigger");
     const btnAppsTrigger = document.getElementById("btn-apps-trigger");
     const searchContainer = document.getElementById("search-container");
@@ -573,18 +583,26 @@
 
       if (!isDeleting && charIndex === currentWord.length) {
         if (wordIndex === 2) { 
+          // "Start searching with" -> Tampilkan Logo Google
           googleLogo.classList.add("show");
           googleLogo.classList.remove("center-zoom"); 
+          aiBrandText.classList.remove("show");
+          typeSpeed = DIAM_BERSAMA_LOGO;
+        } else if (wordIndex === 3) {
+          // "Powered by" -> Tampilkan Teks Google AI
+          googleLogo.classList.remove("show");
+          aiBrandText.classList.add("show");
           typeSpeed = DIAM_BERSAMA_LOGO;
         } else {
           googleLogo.classList.remove("show");
+          aiBrandText.classList.remove("show");
           typeSpeed = DIAM_KALIMAT_1_DAN_2;
         }
         
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         if (wordIndex === 2) {
-          // SAAT TEKS TERHAPUS HABIS: Logo otomatis membesar di tengah
+          // SAAT TEKS "Start searching with" TERHAPUS HABIS: Logo otomatis membesar di tengah
           googleLogo.classList.add("center-zoom");
 
           setTimeout(() => {
@@ -597,9 +615,10 @@
 
           }, LOGO_ZOOM_SENDIRIAN);
 
-          return; // Pause sementara loop
+          return;
         } else {
           googleLogo.classList.remove("show");
+          aiBrandText.classList.remove("show");
           isDeleting = false;
           wordIndex = (wordIndex + 1) % words.length;
           typeSpeed = 500;
