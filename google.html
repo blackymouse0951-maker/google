@@ -96,42 +96,22 @@
       transition: all 0.3s ease;
     }
 
-    /* KELAS KHUSUS SAAT TEKS "POWERED BY" MUNCUL (WARNA-WARNI + ANIMASI NAIK TURUN) */
-    .animated-text.powered-mode {
-      background: linear-gradient(
-        120deg,
-        #ff3366,
-        #ff9900,
-        #33cc33,
-        #00ffff,
-        #9933ff,
-        #ff3366
-      );
-      background-size: 250% 250%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: 
-        rainbowShift 3s ease infinite,
-        poweredFloat 2s ease-in-out infinite;
-      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
-    }
+    /* Efek Glitch Warna-warni untuk "Powered by" */
+.animated-text.powered-mode {
+  color: #fff;
+  position: relative;
+  text-shadow: 2px 0 #ff0055, -2px 0 #00ffff;
+  animation: glitch 0.4s infinite alternate;
+}
 
-    @keyframes rgb-shift {
-      0% { background-position: 0% 50%; border-color: #ffffff; }
-      50% { background-position: 100% 50%; border-color: transparent; }
-      100% { background-position: 0% 50%; border-color: #ffffff; }
-    }
-
-    @keyframes rainbowShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes poweredFloat {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-6px) scale(1.02); }
-    }
+@keyframes glitch {
+  0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ffff; transform: translate(0); }
+  20% { text-shadow: -2px 0 #ff0055, 2px 0 #00ffff; transform: translate(-2px, 1px); }
+  40% { text-shadow: 2px 0 #00ff66, -2px 0 #ff9900; transform: translate(2px, -1px); }
+  60% { text-shadow: -2px 0 #9933ff, 2px 0 #00ffff; transform: translate(0); }
+  80% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff66; transform: translate(1px, 2px); }
+  100% { text-shadow: -2px 0 #00ffff, 2px 0 #ff9900; transform: translate(0); }
+}
 
     /* CONTAINER LOGO GOOGLE */
     .google-logo {
