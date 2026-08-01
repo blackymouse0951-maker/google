@@ -47,6 +47,56 @@
       z-index: 1;
     }
 
+    /* =========================================================
+       WIDGET JAM & CUACA (POKOK KIRI ATAS)
+       ========================================================= */
+    .top-widget-container {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 14px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow);
+      color: #ffffff;
+    }
+
+    .time-display {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      line-height: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .date-display {
+      font-size: 13px;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    .weather-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .weather-icon {
+      font-size: 18px;
+    }
+
+    /* ========================================================= */
+
     .main-container {
       position: relative;
       z-index: 2;
@@ -96,9 +146,6 @@
       transition: all 0.3s ease;
     }
 
-    /* =========================================================
-       ⚡ NO 3: MODUL PULSE ENERGY GLOW (PULSE & GRADIENT SHIFT)
-       ========================================================= */
     .animated-text.powered-mode {
       background: linear-gradient(
         45deg, 
@@ -217,7 +264,6 @@
       display: inline-block;
     }
 
-    /* TEKS GOOGLE AI WARNA PUTIH DENGAN EFEK GLOW BERCAHAYA */
     .ai-brand-text {
       display: none;
       font-size: clamp(28px, 4vw, 42px);
@@ -465,6 +511,12 @@
         flex-direction: column;
         gap: 8px;
       }
+      .top-widget-container {
+        top: 16px;
+        left: 16px;
+        padding: 10px 14px;
+      }
+      .time-display { font-size: 24px; }
     }
   </style>
 </head>
@@ -475,6 +527,16 @@
   </video>
 
   <div class="bg-overlay"></div>
+
+  <!-- WIDGET JAM & CUACA REAL-TIME -->
+  <div class="top-widget-container">
+    <div class="time-display" id="time-text">00:00:00</div>
+    <div class="date-display" id="date-text">Loading...</div>
+    <div class="weather-display" id="weather-container">
+      <span class="weather-icon" id="weather-icon">🌤️</span>
+      <span id="weather-text">Mendapatkan lokasi...</span>
+    </div>
+  </div>
 
   <div class="main-container">
     
@@ -491,7 +553,7 @@
         <span class="item g-text-letter g-letter-e">e</span>
       </div>
 
-      <!-- TEKS GOOGLE AI (WARNA PUTIH) -->
+      <!-- TEKS GOOGLE AI -->
       <div class="ai-brand-text" id="ai-brand-text">Google AI</div>
     </div>
 
@@ -580,21 +642,87 @@
   </div>
 
   <script>
+  // =========================================================
+  // 🕒 LOGIKA WIDGET JAM & TANGGAL
+  // =========================================================
+  function updateClock() {
+    const now = new Date();
+    
+    // Format Jam: HH:MM:SS
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('time-text').textContent = `${hours}:${minutes}:${seconds}`;
+
+    // Format Tanggal: Hari, DD Bulan YYYY
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('date-text').textContent = now.toLocaleDateString('id-ID', options);
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // =========================================================
+  // 🌤️ LOGIKA CUACA REAL-TIME (Open-Meteo API & Geolocation)
+  // =========================================================
+  function getWeatherIcon(code) {
+    if (code === 0) return "☀️"; // Cerah
+    if (code >= 1 && code <= 3) return "🌤️"; // Berawan
+    if (code >= 45 && code <= 48) return "🌫️"; // Kabut
+    if (code >= 51 && code <= 67) return "🌧️"; // Hujan gerimis/sedang
+    if (code >= 80 && code <= 82) return "🌦️"; // Hujan lebat
+    if (code >= 95) return "⛈️"; // Badai Petir
+    return "🌡️";
+  }
+
+  function fetchWeather(lat, lon) {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const weather = data.current_weather;
+        const temp = Math.round(weather.temperature);
+        const icon = getWeatherIcon(weather.weathercode);
+
+        document.getElementById('weather-icon').textContent = icon;
+        document.getElementById('weather-text').textContent = `${temp}°C`;
+      })
+      .catch(() => {
+        document.getElementById('weather-text').textContent = "Gagal memuat cuaca";
+      });
+  }
+
+  function initWeather() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          fetchWeather(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          // Fallback lokasi Jakarta jika izin lokasi ditolak
+          fetchWeather(-6.2088, 106.8456);
+          document.getElementById('weather-text').textContent += " (Jakarta)";
+        }
+      );
+    } else {
+      fetchWeather(-6.2088, 106.8456);
+    }
+  }
+  initWeather();
+
+  // =========================================================
+  // LOGIKA ANIMASI KETIK & SEARCH BAR (ORIGINAL)
+  // =========================================================
   const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Powered by"];
   let wordIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
 
-  // =========================================================
-  // ⏱️ PENGATURAN DURASI WAKTU
-  // =========================================================
   const KECEPATAN_KETIK      = 80;   
   const KECEPATAN_HAPUS      = 40;   
-  
   const DIAM_KALIMAT_1_DAN_2 = 6000; 
   const DIAM_BERSAMA_LOGO    = 6000; 
-  const LOGO_ZOOM_SENDIRIAN  = 6000; // Durasi Google AI diam di tengah
-  // =========================================================
+  const LOGO_ZOOM_SENDIRIAN  = 6000;
 
   const typingElement = document.getElementById("typing-text");
   const googleLogo = document.getElementById("google-logo");
@@ -612,7 +740,6 @@
   function typeEffect() {
     const currentWord = words[wordIndex];
 
-    // Terapkan/Lepas style khusus Pulse Glow untuk "Powered by"
     if (wordIndex === 3) {
       typingElement.classList.add("powered-mode");
     } else {
@@ -629,16 +756,13 @@
 
     let typeSpeed = isDeleting ? KECEPATAN_HAPUS : KECEPATAN_KETIK;
 
-    // --- SAAT TEKS SELESAI DIKETIK ---
     if (!isDeleting && charIndex === currentWord.length) {
       if (wordIndex === 2) { 
-        // "Start searching with" -> Tampilkan Logo Google
         googleLogo.classList.add("show");
         googleLogo.classList.remove("center-zoom"); 
         aiBrandText.classList.remove("show");
         typeSpeed = DIAM_BERSAMA_LOGO;
       } else if (wordIndex === 3) {
-        // "Powered by" -> Tampilkan Teks Google AI
         googleLogo.classList.remove("show");
         aiBrandText.classList.add("show");
         typeSpeed = DIAM_BERSAMA_LOGO;
@@ -650,10 +774,8 @@
       
       isDeleting = true;
     } 
-    // --- SAAT TEKS SELESAI DIHAPUS ---
     else if (isDeleting && charIndex === 0) {
       if (wordIndex === 2) {
-        // SAAT TEKS "Start searching with" TERHAPUS HABIS
         googleLogo.classList.add("center-zoom");
 
         setTimeout(() => {
@@ -667,13 +789,11 @@
 
         return;
       } else if (wordIndex === 3) {
-        // SAAT TEKS "Powered by" TERHAPUS HABIS
-        // Teks Google AI ditahan diam di tengah
         setTimeout(() => {
           aiBrandText.classList.remove("show");
           
           isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length; // Kembali ke kata pertama
+          wordIndex = (wordIndex + 1) % words.length;
           setTimeout(typeEffect, 500);
         }, LOGO_ZOOM_SENDIRIAN);
 
