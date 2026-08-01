@@ -47,9 +47,7 @@
       z-index: 1;
     }
 
-    /* =========================================================
-       WIDGET JAM & CUACA (POKOK KIRI ATAS)
-       ========================================================= */
+    /* WIDGET JAM & CUACA */
     .top-widget-container {
       position: absolute;
       top: 24px;
@@ -95,8 +93,7 @@
       font-size: 18px;
     }
 
-    /* ========================================================= */
-
+    /* MAIN CONTAINER & ANIMASI TEKS */
     .main-container {
       position: relative;
       z-index: 2;
@@ -109,7 +106,6 @@
       padding: 20px;
     }
 
-    /* CONTAINER TEKS DAN LOGO SEJAJAR */
     .animated-text-container {
       min-height: 85px;
       display: flex;
@@ -119,7 +115,6 @@
       flex-wrap: nowrap;
     }
 
-    /* TEKS KETIK UMUM */
     .animated-text {
       background: linear-gradient(
         90deg,
@@ -187,7 +182,6 @@
       100% { background-position: 0% 50%; border-color: #ffffff; }
     }
 
-    /* CONTAINER LOGO GOOGLE */
     .google-logo {
       display: none;
       align-items: center;
@@ -397,10 +391,16 @@
       min-width: 0;
     }
 
+    /* DROPDOWN MODE AI */
     .actions-right {
+      position: relative;
       display: flex;
       align-items: center;
       flex-shrink: 0;
+    }
+
+    .ai-dropdown-wrapper {
+      position: relative;
     }
 
     .ai-btn {
@@ -423,6 +423,41 @@
       transform: scale(1.03);
     }
 
+    .ai-dropdown-menu {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      z-index: 20;
+      width: 150px;
+    }
+
+    .ai-dropdown-menu.show {
+      display: flex;
+    }
+
+    .ai-option {
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #202124;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .ai-option:hover {
+      background: #f1f3f4;
+    }
+
+    /* SUGGESTIONS BOX */
     .suggestions-box {
       position: absolute;
       top: 52px;
@@ -462,6 +497,7 @@
       flex-shrink: 0;
     }
 
+    /* SHORTCUT DOCK & STYLES */
     .apps-wrapper {
       display: flex;
       gap: 18px;
@@ -477,6 +513,7 @@
     }
 
     .app-item {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -485,6 +522,7 @@
       text-decoration: none;
       font-size: 12px;
       transition: transform 0.2s;
+      cursor: pointer;
     }
 
     .app-item:hover {
@@ -501,9 +539,121 @@
       justify-content: center;
     }
 
-    .app-icon-box svg {
-      width: 26px;
-      height: 26px;
+    .app-icon-box img {
+      object-fit: contain;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 18px;
+      height: 18px;
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .app-item:hover .delete-btn {
+      opacity: 1;
+    }
+
+    /* MODAL GENERAL & MODAL PREVIEW AI */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: #1e1e1e;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 24px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-box h3 {
+      margin-bottom: 12px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      outline: none;
+    }
+
+    .ai-preview-content {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e0e0e0;
+      min-height: 100px;
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-actions button {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00f0ff, #7000ff);
+      color: #ffffff;
     }
 
     @media (max-width: 768px) {
@@ -585,59 +735,62 @@
           name="q"
           id="search-input"
           class="search-input"
-          placeholder="Telusuri Google atau ketik URL"
+          placeholder="Telusuri Google atau ketik pertanyaan AI..."
           autocomplete="off"
         />
 
         <div class="actions-right">
-          <button type="button" class="ai-btn" id="ai-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-            </svg>
-            Mode AI
-          </button>
+          <div class="ai-dropdown-wrapper">
+            <button type="button" class="ai-btn" id="ai-btn-trigger">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+              Mode AI ▾
+            </button>
+            <div class="ai-dropdown-menu" id="ai-menu">
+              <div class="ai-option" data-model="gemini">✦ Gemini</div>
+              <div class="ai-option" data-model="chatgpt">🤖 ChatGPT</div>
+              <div class="ai-option" data-model="claude">🧡 Claude</div>
+              <div class="ai-option" data-model="perplexity">🌐 Perplexity</div>
+            </div>
+          </div>
         </div>
       </form>
 
       <div class="suggestions-box" id="suggestions-box"></div>
     </div>
 
-    <div class="apps-wrapper pop-content" id="apps-container">
-      <a href="https://youtube.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#FF0000">
-            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-          </svg>
-        </div>
-        <span>YouTube</span>
-      </a>
+    <!-- CONTAINER SHORTCUTS DOCK -->
+    <div class="apps-wrapper pop-content" id="apps-container"></div>
+  </div>
 
-      <a href="https://web.whatsapp.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/>
-          </svg>
-        </div>
-        <span>WhatsApp</span>
-      </a>
+  <!-- MODAL DIALOG UNTUK TAMBAH SHORTCUT CUSTOM -->
+  <div class="modal-overlay" id="shortcut-modal">
+    <div class="modal-box">
+      <h3>Tambah Shortcut Custom</h3>
+      <input type="text" id="shortcut-name" placeholder="Nama Situs (misal: ChatGPT)" />
+      <input type="url" id="shortcut-url" placeholder="URL Situs (misal: https://chatgpt.com)" />
+      <div class="modal-actions">
+        <button type="button" id="btn-cancel-modal" class="btn-secondary">Batal</button>
+        <button type="button" id="btn-save-modal" class="btn-primary">Simpan</button>
+      </div>
+    </div>
+  </div>
 
-      <a href="https://spotify.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#1DB954">
-            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-          </svg>
-        </div>
-        <span>Spotify</span>
-      </a>
-
-      <a href="https://github.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#FFFFFF">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-        </div>
-        <span>GitHub</span>
-      </a>
+  <!-- MODAL PREVIEW AI RINGKAS -->
+  <div class="modal-overlay" id="ai-preview-modal">
+    <div class="modal-box">
+      <h3>
+        <span id="ai-modal-title">Pratinjau Jawaban AI</span>
+        <span style="font-size: 12px; opacity:0.7;" id="ai-model-badge">Gemini</span>
+      </h3>
+      <div class="ai-preview-content" id="ai-preview-body">
+        Sedang memproses ringkasan jawaban...
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btn-close-ai-modal" class="btn-secondary">Tutup</button>
+        <button type="button" id="btn-open-full-ai" class="btn-primary">Buka Halaman Penuh ↗</button>
+      </div>
     </div>
   </div>
 
@@ -647,14 +800,11 @@
   // =========================================================
   function updateClock() {
     const now = new Date();
-    
-    // Format Jam: HH:MM:SS
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     document.getElementById('time-text').textContent = `${hours}:${minutes}:${seconds}`;
 
-    // Format Tanggal: Hari, DD Bulan YYYY
     const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     document.getElementById('date-text').textContent = now.toLocaleDateString('id-ID', options);
   }
@@ -662,15 +812,15 @@
   updateClock();
 
   // =========================================================
-  // 🌤️ LOGIKA CUACA REAL-TIME (Open-Meteo API & Geolocation)
+  // 🌤️ LOGIKA CUACA REAL-TIME (Open-Meteo & Geolocation)
   // =========================================================
   function getWeatherIcon(code) {
-    if (code === 0) return "☀️"; // Cerah
-    if (code >= 1 && code <= 3) return "🌤️"; // Berawan
-    if (code >= 45 && code <= 48) return "🌫️"; // Kabut
-    if (code >= 51 && code <= 67) return "🌧️"; // Hujan gerimis/sedang
-    if (code >= 80 && code <= 82) return "🌦️"; // Hujan lebat
-    if (code >= 95) return "⛈️"; // Badai Petir
+    if (code === 0) return "☀️";
+    if (code >= 1 && code <= 3) return "🌤️";
+    if (code >= 45 && code <= 48) return "🌫️";
+    if (code >= 51 && code <= 67) return "🌧️";
+    if (code >= 80 && code <= 82) return "🌦️";
+    if (code >= 95) return "⛈️";
     return "🌡️";
   }
 
@@ -695,11 +845,8 @@
   function initWeather() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          fetchWeather(pos.coords.latitude, pos.coords.longitude);
-        },
+        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
         () => {
-          // Fallback lokasi Jakarta jika izin lokasi ditolak
           fetchWeather(-6.2088, 106.8456);
           document.getElementById('weather-text').textContent += " (Jakarta)";
         }
@@ -711,7 +858,177 @@
   initWeather();
 
   // =========================================================
-  // LOGIKA ANIMASI KETIK & SEARCH BAR (ORIGINAL)
+  // 🚀 LOGIKA CUSTOM SHORTCUT DOCK
+  // =========================================================
+  const defaultApps = [
+    { name: "YouTube", url: "https://youtube.com" },
+    { name: "WhatsApp", url: "https://web.whatsapp.com" },
+    { name: "Spotify", url: "https://spotify.com" },
+    { name: "GitHub", url: "https://github.com" }
+  ];
+
+  let customApps = JSON.parse(localStorage.getItem('my_shortcuts')) || defaultApps;
+
+  function renderApps() {
+    const container = document.getElementById('apps-container');
+    container.innerHTML = '';
+
+    customApps.forEach((app, index) => {
+      let domain = "";
+      try { domain = new URL(app.url).hostname; } catch (e) { domain = app.url; }
+      const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+      const appEl = document.createElement('a');
+      appEl.href = app.url;
+      appEl.className = 'app-item';
+      appEl.target = '_blank';
+      appEl.rel = 'noopener noreferrer';
+      appEl.innerHTML = `
+        <div class="delete-btn" data-index="${index}">&times;</div>
+        <div class="app-icon-box">
+          <img src="${faviconUrl}" alt="${app.name}" width="26" height="26" style="border-radius: 4px;" />
+        </div>
+        <span>${app.name}</span>
+      `;
+      container.appendChild(appEl);
+    });
+
+    const addBtn = document.createElement('div');
+    addBtn.className = 'app-item add-btn';
+    addBtn.id = 'btn-add-shortcut';
+    addBtn.innerHTML = `
+      <div class="app-icon-box">
+        <svg viewBox="0 0 24 24" fill="#FFFFFF" width="26" height="26"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      </div>
+      <span>Tambah</span>
+    `;
+    container.appendChild(addBtn);
+
+    initShortcutModalEvents();
+  }
+
+  function initShortcutModalEvents() {
+    const modal = document.getElementById('shortcut-modal');
+    const addBtn = document.getElementById('btn-add-shortcut');
+    const cancelBtn = document.getElementById('btn-cancel-modal');
+    const saveBtn = document.getElementById('btn-save-modal');
+
+    addBtn.onclick = () => modal.classList.add('active');
+    cancelBtn.onclick = () => modal.classList.remove('active');
+
+    saveBtn.onclick = () => {
+      const name = document.getElementById('shortcut-name').value.trim();
+      let url = document.getElementById('shortcut-url').value.trim();
+
+      if (!name || !url) return alert('Mohon isi nama dan URL situs!');
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+      customApps.push({ name, url });
+      localStorage.setItem('my_shortcuts', JSON.stringify(customApps));
+      
+      document.getElementById('shortcut-name').value = '';
+      document.getElementById('shortcut-url').value = '';
+      modal.classList.remove('active');
+      renderApps();
+    };
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = btn.getAttribute('data-index');
+        customApps.splice(idx, 1);
+        localStorage.setItem('my_shortcuts', JSON.stringify(customApps));
+        renderApps();
+      };
+    });
+  }
+
+  renderApps();
+
+  // =========================================================
+  // 🤖 LOGIKA MODE AI LENGKAP (DROPDOWN + PREVIEW POPUP)
+  // =========================================================
+  const aiTriggerBtn = document.getElementById('ai-btn-trigger');
+  const aiMenu = document.getElementById('ai-menu');
+  const aiPreviewModal = document.getElementById('ai-preview-modal');
+  const aiPreviewBody = document.getElementById('ai-preview-body');
+  const aiModelBadge = document.getElementById('ai-model-badge');
+  const btnCloseAiModal = document.getElementById('btn-close-ai-modal');
+  const btnOpenFullAi = document.getElementById('btn-open-full-ai');
+  const searchInput = document.getElementById("search-input");
+
+  let selectedAiModel = "gemini";
+  let targetAiUrl = "";
+
+  // Buka/Tutup Dropdown AI
+  aiTriggerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    aiMenu.classList.toggle('show');
+  });
+
+  document.addEventListener('click', () => {
+    aiMenu.classList.remove('show');
+  });
+
+  // Pemilihan Model AI dari Dropdown
+  document.querySelectorAll('.ai-option').forEach(option => {
+    option.addEventListener('click', (e) => {
+      selectedAiModel = e.target.getAttribute('data-model');
+      const query = searchInput.value.trim();
+
+      aiMenu.classList.remove('show');
+
+      if (!query) {
+        // Jika tidak ada teks pencarian, langsung buka halaman AI pilihan
+        window.location.href = getAiFullUrl(selectedAiModel, "");
+      } else {
+        // Jika ada pertanyaan, tampilkan Modal Preview AI terlebih dahulu
+        triggerAiPreviewModal(selectedAiModel, query);
+      }
+    });
+  });
+
+  function getAiFullUrl(model, query) {
+    const q = encodeURIComponent(query);
+    switch (model) {
+      case 'chatgpt':
+        return q ? `https://chatgpt.com/?q=${q}` : 'https://chatgpt.com/';
+      case 'claude':
+        return q ? `https://claude.ai/new?q=${q}` : 'https://claude.ai/';
+      case 'perplexity':
+        return q ? `https://www.perplexity.ai/search?q=${q}` : 'https://www.perplexity.ai/';
+      case 'gemini':
+      default:
+        return q ? `https://gemini.google.com/app?q=${q}` : 'https://gemini.google.com/';
+    }
+  }
+
+  function triggerAiPreviewModal(model, query) {
+    targetAiUrl = getAiFullUrl(model, query);
+    aiModelBadge.textContent = model.toUpperCase();
+    aiPreviewBody.innerHTML = `⚡ <i>Menyiapkan ikhtisar ringkas untuk:</i> <b>"${query}"</b>...`;
+    aiPreviewModal.classList.add('active');
+
+    // Simulasi Jawaban Ringkas AI Langsung di Tab
+    setTimeout(() => {
+      aiPreviewBody.innerHTML = `
+        <p><b>Pratinjau Hasil Ringkas (${model.toUpperCase()}):</b></p>
+        <p style="margin-top:8px;">Berikut adalah ringkasan awal mengenai topik <i>"${query}"</i>. Klik tombol di bawah untuk melanjutkan percakapan mendalam dan analisis lengkap langsung di platform <b>${model.toUpperCase()}</b>.</p>
+      `;
+    }, 1000);
+  }
+
+  btnCloseAiModal.addEventListener('click', () => {
+    aiPreviewModal.classList.remove('active');
+  });
+
+  btnOpenFullAi.addEventListener('click', () => {
+    window.location.href = targetAiUrl;
+  });
+
+  // =========================================================
+  // ✍️ LOGIKA ANIMASI KETIK & SEARCH BAR (ORIGINAL)
   // =========================================================
   const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Powered by"];
   let wordIndex = 0;
@@ -731,7 +1048,6 @@
   const btnAppsTrigger = document.getElementById("btn-apps-trigger");
   const searchContainer = document.getElementById("search-container");
   const appsContainer = document.getElementById("apps-container");
-  const searchInput = document.getElementById("search-input");
   const searchForm = document.getElementById("search-form");
   const suggestionsBox = document.getElementById("suggestions-box");
   const searchBar = document.querySelector(".search-bar");
@@ -933,7 +1249,7 @@
   });
 
   searchContainer.addEventListener("mouseleave", () => {
-    if (document.activeElement !== searchInput && searchInput.value === "") {
+    if (document.activeElement !== searchInput && searchInput.value === "" && !aiMenu.classList.contains("show")) {
       searchContainer.classList.remove("active");
     }
   });
@@ -960,13 +1276,6 @@
 
   document.getElementById("search-submit").addEventListener("click", () => {
     if (searchInput.value.trim() !== "") searchForm.requestSubmit();
-  });
-
-  document.getElementById("ai-btn").addEventListener("click", () => {
-    const query = searchInput.value.trim();
-    window.location.href = query
-      ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
-      : "https://gemini.google.com/";
   });
 </script>
 </body>
