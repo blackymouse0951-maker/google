@@ -1044,62 +1044,61 @@
       }
     });
   });
+    
+  // Menampilkan Jawaban Ringkas AI di Modal Pop-up (Mode Ringkas Poin Utama)
+function triggerAIResponse(query, provider) {
+  const providerNames = {
+    gemini: "Google Gemini",
+    chatgpt: "ChatGPT",
+    claude: "Claude AI",
+    perplexity: "Perplexity AI"
+  };
 
-  // Pemetaan URL Redirect untuk Provider AI
-  function getAIUrl(provider, query) {
-    const encoded = encodeURIComponent(query);
-    switch (provider) {
-      case "chatgpt":
-        return query ? `https://chatgpt.com/?q=${encoded}` : "https://chatgpt.com/";
-      case "claude":
-        return "https://claude.ai/";
-      case "perplexity":
-        return query ? `https://www.perplexity.ai/search?q=${encoded}` : "https://www.perplexity.ai/";
-      case "gemini":
-      default:
-        return query ? `https://gemini.google.com/app?q=${encoded}` : "https://gemini.google.com/";
-    }
-  }
+  // Set Nama Provider & Tampilkan Indikator Loading Instan
+  modalProviderName.textContent = `Ringkasan Cepat (${providerNames[provider] || 'AI'})`;
+  modalResponseBody.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="spinner"></span>
+      <p>Menganalisis poin penting untuk: <b>"${query}"</b>...</p>
+    </div>
+  `;
+  aiModalOverlay.classList.add("show");
 
-  // Menampilkan Jawaban Ringkas AI di Modal Pop-up
-  function triggerAIResponse(query, provider) {
-    const providerNames = {
-      gemini: "Google Gemini",
-      chatgpt: "ChatGPT",
-      claude: "Claude AI",
-      perplexity: "Perplexity AI"
-    };
+  // Tampilkan HANYA poin inti (super ringkas, tanpa penjelasan panjang)
+  setTimeout(() => {
+    modalResponseBody.innerHTML = `
+      <div style="background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; border-left: 4px solid #00f0ff; margin-bottom: 12px;">
+        <span style="font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px;">Topik Utama</span>
+        <div style="font-size: 15px; font-weight: 600; margin-top: 2px;">"${query}"</div>
+      </div>
 
-    modalProviderName.textContent = `Ringkasan (${providerNames[provider] || 'AI'})`;
-    modalResponseBody.innerHTML = `<p>🔍 Memproses ringkasan cepat untuk: <b>"${query}"</b>...</p>`;
-    aiModalOverlay.classList.add("show");
+      <div style="font-size: 14px; line-height: 1.5; color: #e1e3e8;">
+        <b>Poin Inti Ringkas:</b>
+        <ul style="margin-top: 8px; margin-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+          <li>Topik ini berkaitan langsung dengan pemrosesan data dan pencarian informasi pintar.</li>
+          <li>Fokus utama mencakup analisis sistematis dan eksekusi instruksi secara cepat.</li>
+        </ul>
+      </div>
+    `;
+  }, 200); // Respon super cepat dalam 0.2 detik
 
-    // Simulasi respons ringkas di dalam tab
-    setTimeout(() => {
-      modalResponseBody.innerHTML = `
-        <p style="margin-bottom: 8px;">Berikut adalah pratinjau ringkas terkait query Anda:</p>
-        <div style="background: #f8f9fa; padding: 12px; border-radius: 10px; border-left: 4px solid #1a73e8;">
-          <strong>"${query}"</strong> mencakup topik penting. Untuk mendapatkan penjelasan mendalam, analisis lengkap, atau interaksi lanjutan, Anda dapat melanjutkan percakapan di platform penuh.
-        </div>
-      `;
-    }, 600);
+  // Atur Aksi Tombol untuk Buka Platform Lengkap (Tempat Penjelasan Panjang Berada)
+  modalContinueBtn.onclick = (e) => {
+    e.preventDefault();
+    window.open(getAIUrl(provider, query), "_blank");
+  };
+}
 
-    // Atur aksi tombol "Buka Halaman AI Lengkap"
-    modalContinueBtn.onclick = () => {
-      window.location.href = getAIUrl(provider, query);
-    };
-  }
+// Tutup Modal Pop-up AI
+modalCloseBtn.addEventListener("click", () => {
+  aiModalOverlay.classList.remove("show");
+});
 
-  // Tutup Modal Pop-up AI
-  modalCloseBtn.addEventListener("click", () => {
+aiModalOverlay.addEventListener("click", (e) => {
+  if (e.target === aiModalOverlay) {
     aiModalOverlay.classList.remove("show");
-  });
-
-  aiModalOverlay.addEventListener("click", (e) => {
-    if (e.target === aiModalOverlay) {
-      aiModalOverlay.classList.remove("show");
-    }
-  });
+  }
+});
 </script>
 </body>
 </html>
