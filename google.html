@@ -1,853 +1,1105 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tab Baru</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tab Baru</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    :root {
-      --glass: rgba(255, 255, 255, 0.18);
-      --glass-strong: rgba(255, 255, 255, 0.28);
-      --text: #ffffff;
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-    }
+    :root {
+      --glass: rgba(255, 255, 255, 0.18);
+      --glass-strong: rgba(255, 255, 255, 0.28);
+      --text: #ffffff;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
 
-    body {
-      min-height: 100vh;
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #121212;
-      overflow: hidden;
-      position: relative;
-      padding: 24px;
-    }
+    body {
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #121212;
+      overflow: hidden;
+      position: relative;
+      padding: 24px;
+    }
 
-    .bg-video {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: 0;
-    }
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+    }
 
-    .bg-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.38);
-      z-index: 1;
-    }
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.38);
+      z-index: 1;
+    }
 
-    .main-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 22px;
-      padding: 20px;
-    }
+    .main-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      padding: 20px;
+    }
 
-    /* CONTAINER TEKS DAN LOGO SEJAJAR */
-    .animated-text-container {
-      min-height: 85px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: nowrap;
-    }
+    /* CONTAINER TEKS DAN LOGO SEJAJAR */
+    .animated-text-container {
+      min-height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: nowrap;
+    }
 
-    /* TEKS KETIK UMUM */
-    .animated-text {
-      background: linear-gradient(
-        90deg,
-        #ff0055,
-        #ff5000,
-        #ffcc00,
-        #00ff66,
-        #00ffff,
-        #0066ff,
-        #9900ff,
-        #ff0055
-      );
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: clamp(24px, 3.5vw, 36px);
-      font-weight: 800;
-      letter-spacing: 1px;
-      animation: rgb-shift 4s linear infinite;
-      border-right: 3px solid #fff;
-      white-space: nowrap;
-      padding-right: 5px;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
+    /* TEKS KETIK UMUM */
+    .animated-text {
+      background: linear-gradient(
+        90deg,
+        #ff0055,
+        #ff5000,
+        #ffcc00,
+        #00ff66,
+        #00ffff,
+        #0066ff,
+        #9900ff,
+        #ff0055
+      );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      animation: rgb-shift 4s linear infinite;
+      border-right: 3px solid #fff;
+      white-space: nowrap;
+      padding-right: 5px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
 
-    /* =========================================================
-       ⚡ NO 3: MODUL PULSE ENERGY GLOW (PULSE & GRADIENT SHIFT)
-       ========================================================= */
-    .animated-text.powered-mode {
-      background: linear-gradient(
-        45deg, 
-        #ff007f, 
-        #ffaa00, 
-        #00f0ff, 
-        #7000ff, 
-        #ff007f
-      );
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-      animation: 
-        pulseGlow 1.8s ease-in-out infinite, 
-        gradientShift 4s ease infinite;
-    }
+    /* MODUL PULSE ENERGY GLOW */
+    .animated-text.powered-mode {
+      background: linear-gradient(
+        45deg, 
+        #ff007f, 
+        #ffaa00, 
+        #00f0ff, 
+        #7000ff, 
+        #ff007f
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      animation: 
+        pulseGlow 1.8s ease-in-out infinite, 
+        gradientShift 4s ease infinite;
+    }
 
-    @keyframes pulseGlow {
-      0%, 100% { 
-        transform: scale(1); 
-        filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.5)); 
-      }
-      50% { 
-        transform: scale(1.08); 
-        filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.95)); 
-      }
-    }
+    @keyframes pulseGlow {
+      0%, 100% { 
+        transform: scale(1); 
+        filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.5)); 
+      }
+      50% { 
+        transform: scale(1.08); 
+        filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.95)); 
+      }
+    }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-    @keyframes rgb-shift {
-      0% { background-position: 0% 50%; border-color: #ffffff; }
-      50% { background-position: 100% 50%; border-color: transparent; }
-      100% { background-position: 0% 50%; border-color: #ffffff; }
-    }
+    @keyframes rgb-shift {
+      0% { background-position: 0% 50%; border-color: #ffffff; }
+      50% { background-position: 100% 50%; border-color: transparent; }
+      100% { background-position: 0% 50%; border-color: #ffffff; }
+    }
 
-    /* CONTAINER LOGO GOOGLE */
-    .google-logo {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      user-select: none;
-      white-space: nowrap;
-      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    /* CONTAINER LOGO GOOGLE */
+    .google-logo {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      user-select: none;
+      white-space: nowrap;
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-    .google-logo.show {
-      display: flex;
-    }
+    .google-logo.show {
+      display: flex;
+    }
 
-    .google-logo.center-zoom {
-      transform: scale(2.1);
-    }
+    .google-logo.center-zoom {
+      transform: scale(2.1);
+    }
 
-    @keyframes smoothBounceIn {
-      0% {
-        transform: translateX(120vw) translateY(0) scale(0.98);
-        opacity: 0;
-      }
-      55% {
-        transform: translateX(12vw) translateY(-18px) scale(1);
-        opacity: 1;
-      }
-      72% {
-        transform: translateX(6vw) translateY(6px);
-      }
-      86% {
-        transform: translateX(2vw) translateY(-4px);
-      }
-      100% {
-        transform: translateX(0) translateY(0) scale(1);
-        opacity: 1;
-      }
-    }
+    @keyframes smoothBounceIn {
+      0% {
+        transform: translateX(120vw) translateY(0) scale(0.98);
+        opacity: 0;
+      }
+      55% {
+        transform: translateX(12vw) translateY(-18px) scale(1);
+        opacity: 1;
+      }
+      72% {
+        transform: translateX(6vw) translateY(6px);
+      }
+      86% {
+        transform: translateX(2vw) translateY(-4px);
+      }
+      100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
 
-    @keyframes waveFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
+    @keyframes waveFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
 
-    .item {
-      opacity: 0;
-      display: inline-block;
-      will-change: transform, opacity;
-    }
+    .item {
+      opacity: 0;
+      display: inline-block;
+      will-change: transform, opacity;
+    }
 
-    .google-logo.show .item {
-      animation: 
-        smoothBounceIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-        waveFloat 2.2s ease-in-out infinite 1.8s;
-    }
+    .google-logo.show .item {
+      animation: 
+        smoothBounceIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+        waveFloat 2.2s ease-in-out infinite 1.8s;
+    }
 
-    .google-logo.show .g-letter-cap-g { animation-delay: 0.00s, 1.80s; }
-    .google-logo.show .g-letter-o1    { animation-delay: 0.15s, 1.95s; }
-    .google-logo.show .g-letter-o2    { animation-delay: 0.30s, 2.10s; }
-    .google-logo.show .g-letter-g     { animation-delay: 0.45s, 2.25s; }
-    .google-logo.show .g-letter-l     { animation-delay: 0.60s, 2.40s; }
-    .google-logo.show .g-letter-e     { animation-delay: 0.75s, 2.55s; }
+    .google-logo.show .g-letter-cap-g { animation-delay: 0.00s, 1.80s; }
+    .google-logo.show .g-letter-o1    { animation-delay: 0.15s, 1.95s; }
+    .google-logo.show .g-letter-o2    { animation-delay: 0.30s, 2.10s; }
+    .google-logo.show .g-letter-g     { animation-delay: 0.45s, 2.25s; }
+    .google-logo.show .g-letter-l     { animation-delay: 0.60s, 2.40s; }
+    .google-logo.show .g-letter-e     { animation-delay: 0.75s, 2.55s; }
 
-    .g-text-letter {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 60px;
-      font-weight: 700;
-      color: #d7d7d7;
-      text-shadow:
-        0 2px 0 #8f8f8f,
-        -2px -1px 0 #ffffff,
-        1px 1px 2px rgba(0, 0, 0, 0.35);
-      letter-spacing: -2px;
-      display: inline-block;
-    }
+    .g-text-letter {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 60px;
+      font-weight: 700;
+      color: #d7d7d7;
+      text-shadow:
+        0 2px 0 #8f8f8f,
+        -2px -1px 0 #ffffff,
+        1px 1px 2px rgba(0, 0, 0, 0.35);
+      letter-spacing: -2px;
+      display: inline-block;
+    }
 
-    /* TEKS GOOGLE AI WARNA PUTIH DENGAN EFEK GLOW BERCAHAYA */
-    .ai-brand-text {
-      display: none;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 800;
-      color: #ffffff;
-      text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(255, 255, 255, 0.5),
-        0 0 30px rgba(255, 255, 255, 0.3);
-      letter-spacing: 1.5px;
-    }
+    .ai-brand-text {
+      display: none;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 30px rgba(255, 255, 255, 0.3);
+      letter-spacing: 1.5px;
+    }
 
-    .ai-brand-text.show {
-      display: inline-block;
-      animation: popInWhite 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, whiteGlow 2s ease-in-out infinite alternate;
-    }
+    .ai-brand-text.show {
+      display: inline-block;
+      animation: popInWhite 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, whiteGlow 2s ease-in-out infinite alternate;
+    }
 
-    @keyframes popInWhite {
-      0% { transform: scale(0.4) rotate(-3deg); opacity: 0; }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    }
+    @keyframes popInWhite {
+      0% { transform: scale(0.4) rotate(-3deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
 
-    @keyframes whiteGlow {
-      0% {
-        text-shadow: 
-          0 0 10px rgba(255, 255, 255, 0.8),
-          0 0 20px rgba(255, 255, 255, 0.4);
-      }
-      100% {
-        text-shadow: 
-          0 0 15px rgba(255, 255, 255, 1),
-          0 0 30px rgba(255, 255, 255, 0.8),
-          0 0 45px rgba(255, 255, 255, 0.5);
-      }
-    }
+    @keyframes whiteGlow {
+      0% {
+        text-shadow: 
+          0 0 10px rgba(255, 255, 255, 0.8),
+          0 0 20px rgba(255, 255, 255, 0.4);
+      }
+      100% {
+        text-shadow: 
+          0 0 15px rgba(255, 255, 255, 1),
+          0 0 30px rgba(255, 255, 255, 0.8),
+          0 0 45px rgba(255, 255, 255, 0.5);
+      }
+    }
 
-    /* TOMBOL DAN DOCK */
-    .button-group {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      margin-top: 4px;
-    }
+    /* TOMBOL DAN DOCK */
+    .button-group {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-top: 4px;
+    }
 
-    .circle-btn {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-    }
+    .circle-btn {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
 
-    .circle-btn:hover {
-      background: var(--glass-strong);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-    }
+    .circle-btn:hover {
+      background: var(--glass-strong);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
 
-    .circle-btn svg {
-      width: 28px;
-      height: 28px;
-      fill: currentColor;
-    }
+    .circle-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: currentColor;
+    }
 
-    .pop-content {
-      position: absolute;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-    }
+    .pop-content {
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
 
-    .pop-content.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
+    .pop-content.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-    .search-wrapper {
-      width: 100%;
-      max-width: 650px;
-      position: relative;
-      margin-top: 10px;
-    }
+    .search-wrapper {
+      width: 100%;
+      max-width: 650px;
+      position: relative;
+      margin-top: 10px;
+    }
 
-    .search-bar {
-      width: 100%;
-      background: #fff;
-      height: 52px;
-      border-radius: 26px;
-      display: flex;
-      align-items: center;
-      padding: 0 18px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      position: relative;
-      z-index: 10;
-    }
+    .search-bar {
+      width: 100%;
+      background: #fff;
+      height: 52px;
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px 0 18px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+    }
 
-    .search-bar.has-suggestions {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
+    .search-bar.has-suggestions {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
 
-    .search-icon {
-      color: #70757a;
-      margin-right: 12px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
+    .search-icon {
+      color: #70757a;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
 
-    .search-input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      color: #202124;
-      background: transparent;
-      min-width: 0;
-    }
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #202124;
+      background: transparent;
+      min-width: 0;
+    }
 
-    .actions-right {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
+    .actions-right {
+      display: flex;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
 
-    .ai-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background-color: #f1f3f4;
-      border: 1px solid #dadce0;
-      padding: 8px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #3c4043;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+    .ai-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #f1f3f4;
+      border: 1px solid #dadce0;
+      padding: 8px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3c4043;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-    .ai-btn:hover {
-      background-color: #e8eaed;
-      transform: scale(1.03);
-    }
+    .ai-btn:hover {
+      background-color: #e8eaed;
+      transform: scale(1.03);
+    }
 
-    .suggestions-box {
-      position: absolute;
-      top: 52px;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      display: none;
-      z-index: 9;
-      padding-top: 6px;
-      padding-bottom: 8px;
-      border-top: 1px solid #e0e0e0;
-    }
+    .ai-dropdown-arrow {
+      margin-left: 2px;
+      transition: transform 0.2s ease;
+    }
 
-    .suggestion-item {
-      padding: 10px 20px;
-      font-size: 15px;
-      color: #202124;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .ai-dropdown-menu {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      width: 160px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 20;
+      border: 1px solid #e0e0e0;
+    }
 
-    .suggestion-item:hover,
-    .suggestion-item.selected {
-      background-color: #f1f3f4;
-    }
+    .ai-dropdown-menu.show {
+      display: flex;
+    }
 
-    .suggestion-item svg {
-      width: 16px;
-      height: 16px;
-      fill: #70757a;
-      flex-shrink: 0;
-    }
+    .ai-dropdown-item {
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3c4043;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
 
-    .apps-wrapper {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 15px 22px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 210px;
-    }
+    .ai-dropdown-item:hover {
+      background: #f1f3f4;
+      color: #1a73e8;
+    }
 
-    .app-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: white;
-      text-decoration: none;
-      font-size: 12px;
-      transition: transform 0.2s;
-    }
+    .suggestions-box {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: none;
+      z-index: 9;
+      padding-top: 6px;
+      padding-bottom: 8px;
+      border-top: 1px solid #e0e0e0;
+    }
 
-    .app-item:hover {
-      transform: translateY(-3px);
-    }
+    .suggestion-item {
+      padding: 10px 20px;
+      font-size: 15px;
+      color: #202124;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-    .app-icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+      background-color: #f1f3f4;
+    }
 
-    .app-icon-box svg {
-      width: 26px;
-      height: 26px;
-    }
+    .suggestion-item svg {
+      width: 16px;
+      height: 16px;
+      fill: #70757a;
+      flex-shrink: 0;
+    }
 
-    @media (max-width: 768px) {
-      .animated-text-container {
-        flex-direction: column;
-        gap: 8px;
-      }
-    }
-  </style>
+    .apps-wrapper {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 15px 22px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 210px;
+    }
+
+    .app-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .app-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .app-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-icon-box svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    /* MODAL INTERAKSI AI */
+    .ai-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .ai-modal-overlay.show {
+      display: flex;
+    }
+
+    .ai-modal-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      max-width: 580px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+      animation: modalPopUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPopUp {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .ai-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ai-modal-title {
+      font-weight: 700;
+      font-size: 18px;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #5f6368;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50%;
+    }
+
+    .ai-modal-close:hover {
+      background: #e8eaed;
+    }
+
+    .ai-modal-body {
+      font-size: 15px;
+      color: #3c4043;
+      line-height: 1.6;
+      min-height: 80px;
+    }
+
+    .ai-modal-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .ai-action-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .ai-action-primary {
+      background: #1a73e8;
+      color: white;
+    }
+
+    .ai-action-primary:hover {
+      background: #1557b0;
+    }
+
+    @media (max-width: 768px) {
+      .animated-text-container {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <video class="bg-video" autoplay loop muted playsinline preload="auto">
-    <source src="Video pxm.mov" type="video/mp4">
-  </video>
+  <video class="bg-video" autoplay loop muted playsinline preload="auto">
+    <source src="Video pxm.mov" type="video/mp4">
+  </video>
 
-  <div class="bg-overlay"></div>
+  <div class="bg-overlay"></div>
 
-  <div class="main-container">
-    
-    <div class="animated-text-container">
-      <span class="animated-text" id="typing-text"></span>
+  <div class="main-container">
+    
+    <div class="animated-text-container">
+      <span class="animated-text" id="typing-text"></span>
 
-      <!-- LOGO GOOGLE -->
-      <div class="google-logo" id="google-logo">
-        <span class="item g-text-letter g-letter-cap-g">G</span>
-        <span class="item g-text-letter g-letter-o1">o</span>
-        <span class="item g-text-letter g-letter-o2">o</span>
-        <span class="item g-text-letter g-letter-g">g</span>
-        <span class="item g-text-letter g-letter-l">l</span>
-        <span class="item g-text-letter g-letter-e">e</span>
-      </div>
+      <!-- LOGO GOOGLE -->
+      <div class="google-logo" id="google-logo">
+        <span class="item g-text-letter g-letter-cap-g">G</span>
+        <span class="item g-text-letter g-letter-o1">o</span>
+        <span class="item g-text-letter g-letter-o2">o</span>
+        <span class="item g-text-letter g-letter-g">g</span>
+        <span class="item g-text-letter g-letter-l">l</span>
+        <span class="item g-text-letter g-letter-e">e</span>
+      </div>
 
-      <!-- TEKS GOOGLE AI (WARNA PUTIH) -->
-      <div class="ai-brand-text" id="ai-brand-text">Google AI</div>
-    </div>
+      <!-- TEKS GOOGLE AI -->
+      <div class="ai-brand-text" id="ai-brand-text">Google AI</div>
+    </div>
 
-    <div class="button-group">
-      <div class="circle-btn" id="btn-search-trigger" title="Pencarian Google">
-        <svg viewBox="0 0 24 24">
-          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-        </svg>
-      </div>
+    <div class="button-group">
+      <div class="circle-btn" id="btn-search-trigger" title="Pencarian Google">
+        <svg viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </div>
 
-      <div class="circle-btn" id="btn-apps-trigger" title="Aplikasi">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/>
-        </svg>
-      </div>
-    </div>
+      <div class="circle-btn" id="btn-apps-trigger" title="Aplikasi">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/>
+        </svg>
+      </div>
+    </div>
 
-    <div class="search-wrapper pop-content" id="search-container">
-      <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
-        <div class="search-icon" id="search-submit" title="Cari">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </div>
+    <div class="search-wrapper pop-content" id="search-container">
+      <form class="search-bar" id="search-form" action="https://www.google.com/search" method="GET">
+        <div class="search-icon" id="search-submit" title="Cari">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
 
-        <input
-          type="text"
-          name="q"
-          id="search-input"
-          class="search-input"
-          placeholder="Telusuri Google atau ketik URL"
-          autocomplete="off"
-        />
+        <input
+          type="text"
+          name="q"
+          id="search-input"
+          class="search-input"
+          placeholder="Telusuri Google atau ketik URL"
+          autocomplete="off"
+        />
 
-        <div class="actions-right">
-          <button type="button" class="ai-btn" id="ai-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-            </svg>
-            Mode AI
-          </button>
-        </div>
-      </form>
+        <div class="actions-right">
+          <button type="button" class="ai-btn" id="ai-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            <span id="ai-btn-label">Mode AI</span>
+            <svg class="ai-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </button>
 
-      <div class="suggestions-box" id="suggestions-box"></div>
-    </div>
+          <!-- DROPDOWN PILIHAN AI -->
+          <div class="ai-dropdown-menu" id="ai-dropdown">
+            <div class="ai-dropdown-item" data-ai="gemini">✨ Gemini</div>
+            <div class="ai-dropdown-item" data-ai="chatgpt">🤖 ChatGPT</div>
+            <div class="ai-dropdown-item" data-ai="claude">🧠 Claude</div>
+            <div class="ai-dropdown-item" data-ai="perplexity">🔍 Perplexity</div>
+          </div>
+        </div>
+      </form>
 
-    <div class="apps-wrapper pop-content" id="apps-container">
-      <a href="https://youtube.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#FF0000">
-            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-          </svg>
-        </div>
-        <span>YouTube</span>
-      </a>
+      <div class="suggestions-box" id="suggestions-box"></div>
+    </div>
 
-      <a href="https://web.whatsapp.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#25D366">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/>
-          </svg>
-        </div>
-        <span>WhatsApp</span>
-      </a>
+    <div class="apps-wrapper pop-content" id="apps-container">
+      <a href="https://youtube.com" class="app-item" target="_blank" rel="noopener noreferrer">
+        <div class="app-icon-box">
+          <svg viewBox="0 0 24 24" fill="#FF0000">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <span>YouTube</span>
+      </a>
 
-      <a href="https://spotify.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#1DB954">
-            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-          </svg>
-        </div>
-        <span>Spotify</span>
-      </a>
+      <a href="https://web.whatsapp.com" class="app-item" target="_blank" rel="noopener noreferrer">
+        <div class="app-icon-box">
+          <svg viewBox="0 0 24 24" fill="#25D366">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/>
+          </svg>
+        </div>
+        <span>WhatsApp</span>
+      </a>
 
-      <a href="https://github.com" class="app-item" target="_blank" rel="noopener noreferrer">
-        <div class="app-icon-box">
-          <svg viewBox="0 0 24 24" fill="#FFFFFF">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-        </div>
-        <span>GitHub</span>
-      </a>
-    </div>
-  </div>
+      <a href="https://spotify.com" class="app-item" target="_blank" rel="noopener noreferrer">
+        <div class="app-icon-box">
+          <svg viewBox="0 0 24 24" fill="#1DB954">
+            <path d="M12 0C5.376 0 0 5.37 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.899 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.019zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+        </div>
+        <span>Spotify</span>
+      </a>
 
-  <script>
-  const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Supported by"];
-  let wordIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
+      <a href="https://github.com" class="app-item" target="_blank" rel="noopener noreferrer">
+        <div class="app-icon-box">
+          <svg viewBox="0 0 24 24" fill="#FFFFFF">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </div>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
 
-  // =========================================================
-  // ⏱️ PENGATURAN DURASI WAKTU
-  // =========================================================
-  const KECEPATAN_KETIK      = 80;   
-  const KECEPATAN_HAPUS      = 40;   
-  
-  const DIAM_KALIMAT_1_DAN_2 = 6000; 
-  const DIAM_BERSAMA_LOGO    = 6000; 
-  const LOGO_ZOOM_SENDIRIAN  = 6000; // Durasi Google AI diam di tengah
-  // =========================================================
+  <!-- MODAL POP-UP AI INTERAKSI LANGSUNG -->
+  <div class="ai-modal-overlay" id="ai-modal-overlay">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title">
+          <span>✨</span>
+          <span id="modal-provider-name">Jawaban Ringkas AI</span>
+        </div>
+        <button class="ai-modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="ai-modal-body" id="modal-response-body">
+        Sedang menyiapkan jawaban ringkas...
+      </div>
+      <div class="ai-modal-footer">
+        <button class="ai-action-btn ai-action-primary" id="modal-continue-btn">Buka Halaman AI Lengkap</button>
+      </div>
+    </div>
+  </div>
 
-  const typingElement = document.getElementById("typing-text");
-  const googleLogo = document.getElementById("google-logo");
-  const aiBrandText = document.getElementById("ai-brand-text");
-  const btnSearchTrigger = document.getElementById("btn-search-trigger");
-  const btnAppsTrigger = document.getElementById("btn-apps-trigger");
-  const searchContainer = document.getElementById("search-container");
-  const appsContainer = document.getElementById("apps-container");
-  const searchInput = document.getElementById("search-input");
-  const searchForm = document.getElementById("search-form");
-  const suggestionsBox = document.getElementById("suggestions-box");
-  const searchBar = document.querySelector(".search-bar");
-  let currentFocus = -1;
+  <script>
+  const words = ["Welcome Firman!", "What are you looking for today?", "Start searching with", "Supported by"];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
 
-  function typeEffect() {
-    const currentWord = words[wordIndex];
+  const KECEPATAN_KETIK      = 80;   
+  const KECEPATAN_HAPUS      = 40;   
+  const DIAM_KALIMAT_1_DAN_2 = 6000; 
+  const DIAM_BERSAMA_LOGO    = 6000; 
+  const LOGO_ZOOM_SENDIRIAN  = 6000;
 
-    // Terapkan/Lepas style khusus Pulse Glow untuk "Powered by"
-    if (wordIndex === 3) {
-      typingElement.classList.add("powered-mode");
-    } else {
-      typingElement.classList.remove("powered-mode");
-    }
+  const typingElement = document.getElementById("typing-text");
+  const googleLogo = document.getElementById("google-logo");
+  const aiBrandText = document.getElementById("ai-brand-text");
+  const btnSearchTrigger = document.getElementById("btn-search-trigger");
+  const btnAppsTrigger = document.getElementById("btn-apps-trigger");
+  const searchContainer = document.getElementById("search-container");
+  const appsContainer = document.getElementById("apps-container");
+  const searchInput = document.getElementById("search-input");
+  const searchForm = document.getElementById("search-form");
+  const suggestionsBox = document.getElementById("suggestions-box");
+  const searchBar = document.querySelector(".search-bar");
+  
+  // ELEMENT UNTUK FITUR INTEGRASI AI
+  const aiBtn = document.getElementById("ai-btn");
+  const aiDropdown = document.getElementById("ai-dropdown");
+  const aiBtnLabel = document.getElementById("ai-btn-label");
+  const aiModalOverlay = document.getElementById("ai-modal-overlay");
+  const modalCloseBtn = document.getElementById("modal-close-btn");
+  const modalResponseBody = document.getElementById("modal-response-body");
+  const modalProviderName = document.getElementById("modal-provider-name");
+  const modalContinueBtn = document.getElementById("modal-continue-btn");
 
-    if (isDeleting) {
-      charIndex--;
-      typingElement.textContent = currentWord.substring(0, charIndex);
-    } else {
-      charIndex++;
-      typingElement.textContent = currentWord.substring(0, charIndex);
-    }
+  let selectedAI = "gemini"; // default AI provider
+  let currentFocus = -1;
 
-    let typeSpeed = isDeleting ? KECEPATAN_HAPUS : KECEPATAN_KETIK;
+  function typeEffect() {
+    const currentWord = words[wordIndex];
 
-    // --- SAAT TEKS SELESAI DIKETIK ---
-    if (!isDeleting && charIndex === currentWord.length) {
-      if (wordIndex === 2) { 
-        // "Start searching with" -> Tampilkan Logo Google
-        googleLogo.classList.add("show");
-        googleLogo.classList.remove("center-zoom"); 
-        aiBrandText.classList.remove("show");
-        typeSpeed = DIAM_BERSAMA_LOGO;
-      } else if (wordIndex === 3) {
-        // "Powered by" -> Tampilkan Teks Google AI
-        googleLogo.classList.remove("show");
-        aiBrandText.classList.add("show");
-        typeSpeed = DIAM_BERSAMA_LOGO;
-      } else {
-        googleLogo.classList.remove("show");
-        aiBrandText.classList.remove("show");
-        typeSpeed = DIAM_KALIMAT_1_DAN_2;
-      }
-      
-      isDeleting = true;
-    } 
-    // --- SAAT TEKS SELESAI DIHAPUS ---
-    else if (isDeleting && charIndex === 0) {
-      if (wordIndex === 2) {
-        // SAAT TEKS "Start searching with" TERHAPUS HABIS
-        googleLogo.classList.add("center-zoom");
+    if (wordIndex === 3) {
+      typingElement.classList.add("powered-mode");
+    } else {
+      typingElement.classList.remove("powered-mode");
+    }
 
-        setTimeout(() => {
-          googleLogo.classList.remove("show");
-          googleLogo.classList.remove("center-zoom");
-          
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
-          setTimeout(typeEffect, 500);
-        }, LOGO_ZOOM_SENDIRIAN);
+    if (isDeleting) {
+      charIndex--;
+      typingElement.textContent = currentWord.substring(0, charIndex);
+    } else {
+      charIndex++;
+      typingElement.textContent = currentWord.substring(0, charIndex);
+    }
 
-        return;
-      } else if (wordIndex === 3) {
-        // SAAT TEKS "Powered by" TERHAPUS HABIS
-        // Teks Google AI ditahan diam di tengah
-        setTimeout(() => {
-          aiBrandText.classList.remove("show");
-          
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length; // Kembali ke kata pertama
-          setTimeout(typeEffect, 500);
-        }, LOGO_ZOOM_SENDIRIAN);
+    let typeSpeed = isDeleting ? KECEPATAN_HAPUS : KECEPATAN_KETIK;
 
-        return;
-      } else {
-        googleLogo.classList.remove("show");
-        aiBrandText.classList.remove("show");
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 500;
-      }
-    }
+    if (!isDeleting && charIndex === currentWord.length) {
+      if (wordIndex === 2) { 
+        googleLogo.classList.add("show");
+        googleLogo.classList.remove("center-zoom"); 
+        aiBrandText.classList.remove("show");
+        typeSpeed = DIAM_BERSAMA_LOGO;
+      } else if (wordIndex === 3) {
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.add("show");
+        typeSpeed = DIAM_BERSAMA_LOGO;
+      } else {
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.remove("show");
+        typeSpeed = DIAM_KALIMAT_1_DAN_2;
+      }
+      
+      isDeleting = true;
+    } 
+    else if (isDeleting && charIndex === 0) {
+      if (wordIndex === 2) {
+        googleLogo.classList.add("center-zoom");
 
-    setTimeout(typeEffect, typeSpeed);
-  }
+        setTimeout(() => {
+          googleLogo.classList.remove("show");
+          googleLogo.classList.remove("center-zoom");
+          
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(typeEffect, 500);
+        }, LOGO_ZOOM_SENDIRIAN);
 
-  typeEffect();
+        return;
+      } else if (wordIndex === 3) {
+        setTimeout(() => {
+          aiBrandText.classList.remove("show");
+          
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(typeEffect, 500);
+        }, LOGO_ZOOM_SENDIRIAN);
 
-  window.handleSuggestions = function(data) {
-    const suggestions = data?.[1] || [];
-    if (suggestions.length > 0) showSuggestions(suggestions);
-    else hideSuggestions();
-  };
+        return;
+      } else {
+        googleLogo.classList.remove("show");
+        aiBrandText.classList.remove("show");
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        typeSpeed = 500;
+      }
+    }
 
-  function fetchSuggestions(query) {
-    if (!query.trim()) {
-      hideSuggestions();
-      return;
-    }
+    setTimeout(typeEffect, typeSpeed);
+  }
 
-    const oldScript = document.getElementById("jsonp-suggestions");
-    if (oldScript) oldScript.remove();
+  typeEffect();
 
-    const script = document.createElement("script");
-    script.id = "jsonp-suggestions";
-    script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
-    document.body.appendChild(script);
-  }
+  window.handleSuggestions = function(data) {
+    const suggestions = data?.[1] || [];
+    if (suggestions.length > 0) showSuggestions(suggestions);
+    else hideSuggestions();
+  };
 
-  function showSuggestions(list) {
-    suggestionsBox.innerHTML = "";
-    currentFocus = -1;
+  function fetchSuggestions(query) {
+    if (!query.trim()) {
+      hideSuggestions();
+      return;
+    }
 
-    list.slice(0, 6).forEach((text) => {
-      const item = document.createElement("div");
-      item.className = "suggestion-item";
-      item.innerHTML = `
-        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <span>${text}</span>
-      `;
+    const oldScript = document.getElementById("jsonp-suggestions");
+    if (oldScript) oldScript.remove();
 
-      item.addEventListener("click", () => {
-        searchInput.value = text;
-        searchForm.submit();
-      });
+    const script = document.createElement("script");
+    script.id = "jsonp-suggestions";
+    script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+    document.body.appendChild(script);
+  }
 
-      suggestionsBox.appendChild(item);
-    });
+  function showSuggestions(list) {
+    suggestionsBox.innerHTML = "";
+    currentFocus = -1;
 
-    suggestionsBox.style.display = "block";
-    searchBar.classList.add("has-suggestions");
-  }
+    list.slice(0, 6).forEach((text) => {
+      const item = document.createElement("div");
+      item.className = "suggestion-item";
+      item.innerHTML = `
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>${text}</span>
+      `;
 
-  function hideSuggestions() {
-    suggestionsBox.style.display = "none";
-    suggestionsBox.innerHTML = "";
-    searchBar.classList.remove("has-suggestions");
-    currentFocus = -1;
-  }
+      item.addEventListener("click", () => {
+        searchInput.value = text;
+        searchForm.submit();
+      });
 
-  function debounce(func, delay) {
-    let timeoutId;
-    return function (...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(this, args), delay);
-    };
-  }
+      suggestionsBox.appendChild(item);
+    });
 
-  const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
+    suggestionsBox.style.display = "block";
+    searchBar.classList.add("has-suggestions");
+  }
 
-  searchInput.addEventListener("input", (e) => {
-    debouncedFetchSuggestions(e.target.value);
-  });
+  function hideSuggestions() {
+    suggestionsBox.style.display = "none";
+    suggestionsBox.innerHTML = "";
+    searchBar.classList.remove("has-suggestions");
+    currentFocus = -1;
+  }
 
-  searchInput.addEventListener("keydown", (e) => {
-    const items = suggestionsBox.getElementsByClassName("suggestion-item");
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      currentFocus++;
-      addActive(items);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      currentFocus--;
-      addActive(items);
-    } else if (e.key === "Enter") {
-      if (currentFocus > -1 && items[currentFocus]) {
-        e.preventDefault();
-        items[currentFocus].click();
-      }
-    } else if (e.key === "Escape") {
-      hideSuggestions();
-    }
-  });
+  const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
 
-  function addActive(items) {
-    if (!items || items.length === 0) return;
-    removeActive(items);
+  searchInput.addEventListener("input", (e) => {
+    debouncedFetchSuggestions(e.target.value);
+  });
 
-    if (currentFocus >= items.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = items.length - 1;
+  searchInput.addEventListener("keydown", (e) => {
+    const items = suggestionsBox.getElementsByClassName("suggestion-item");
 
-    items[currentFocus].classList.add("selected");
-    searchInput.value = items[currentFocus].querySelector("span").textContent;
-  }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      currentFocus++;
+      addActive(items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      currentFocus--;
+      addActive(items);
+    } else if (e.key === "Enter") {
+      if (currentFocus > -1 && items[currentFocus]) {
+        e.preventDefault();
+        items[currentFocus].click();
+      }
+    } else if (e.key === "Escape") {
+      hideSuggestions();
+    }
+  });
 
-  function removeActive(items) {
-    for (let i = 0; i < items.length; i++) {
-      items[i].classList.remove("selected");
-    }
-  }
+  function addActive(items) {
+    if (!items || items.length === 0) return;
+    removeActive(items);
 
-  document.addEventListener("click", (e) => {
-    if (!searchContainer.contains(e.target)) hideSuggestions();
-  });
+    if (currentFocus >= items.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = items.length - 1;
 
-  btnSearchTrigger.addEventListener("mouseenter", () => {
-    searchContainer.classList.add("active");
-    appsContainer.classList.remove("active");
-    setTimeout(() => searchInput.focus(), 100);
-  });
+    items[currentFocus].classList.add("selected");
+    searchInput.value = items[currentFocus].querySelector("span").textContent;
+  }
 
-  btnAppsTrigger.addEventListener("mouseenter", () => {
-    appsContainer.classList.add("active");
-    searchContainer.classList.remove("active");
-    hideSuggestions();
-  });
+  function removeActive(items) {
+    for (let i = 0; i < items.length; i++) {
+      items[i].classList.remove("selected");
+    }
+  }
 
-  searchContainer.addEventListener("mouseleave", () => {
-    if (document.activeElement !== searchInput && searchInput.value === "") {
-      searchContainer.classList.remove("active");
-    }
-  });
+  document.addEventListener("click", (e) => {
+    if (!searchContainer.contains(e.target)) hideSuggestions();
+    if (!aiBtn.contains(e.target) && !aiDropdown.contains(e.target)) {
+      aiDropdown.classList.remove("show");
+    }
+  });
 
-  appsContainer.addEventListener("mouseleave", () => {
-    appsContainer.classList.remove("active");
-  });
+  btnSearchTrigger.addEventListener("mouseenter", () => {
+    searchContainer.classList.add("active");
+    appsContainer.classList.remove("active");
+    setTimeout(() => searchInput.focus(), 100);
+  });
 
-  searchForm.addEventListener("submit", (e) => {
-    const query = searchInput.value.trim();
-    if (!query) {
-      e.preventDefault();
-      return;
-    }
+  btnAppsTrigger.addEventListener("mouseenter", () => {
+    appsContainer.classList.add("active");
+    searchContainer.classList.remove("active");
+    hideSuggestions();
+  });
 
-    if (/^(https?:\/\/)/i.test(query)) {
-      e.preventDefault();
-      window.location.href = query;
-    } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
-      e.preventDefault();
-      window.location.href = "https://" + query;
-    }
-  });
+  searchContainer.addEventListener("mouseleave", () => {
+    if (document.activeElement !== searchInput && searchInput.value === "" && !aiDropdown.classList.contains("show")) {
+      searchContainer.classList.remove("active");
+    }
+  });
 
-  document.getElementById("search-submit").addEventListener("click", () => {
-    if (searchInput.value.trim() !== "") searchForm.requestSubmit();
-  });
+  appsContainer.addEventListener("mouseleave", () => {
+    appsContainer.classList.remove("active");
+  });
 
-  document.getElementById("ai-btn").addEventListener("click", () => {
-    const query = searchInput.value.trim();
-    window.location.href = query
-      ? `https://gemini.google.com/app?q=${encodeURIComponent(query)}`
-      : "https://gemini.google.com/";
-  });
+  searchForm.addEventListener("submit", (e) => {
+    const query = searchInput.value.trim();
+    if (!query) {
+      e.preventDefault();
+      return;
+    }
+
+    if (/^(https?:\/\/)/i.test(query)) {
+      e.preventDefault();
+      window.location.href = query;
+    } else if (/^[\w-]+(\.[\w-]+)+/.test(query)) {
+      e.preventDefault();
+      window.location.href = "https://" + query;
+    }
+  });
+
+  document.getElementById("search-submit").addEventListener("click", () => {
+    if (searchInput.value.trim() !== "") searchForm.requestSubmit();
+  });
+
+  // =========================================================
+  // ⚡ LOGIKA INTEGRASI AI (DROPDOWN & INTERAKSI MODAL POP-UP)
+  // =========================================================
+
+  // Buka/Tutup Dropdown Pilihan AI saat Tombol Mode AI diklik
+  aiBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    aiDropdown.classList.toggle("show");
+  });
+
+  // Memilih Provider AI dari Dropdown
+  document.querySelectorAll(".ai-dropdown-item").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      selectedAI = item.getAttribute("data-ai");
+      
+      const names = {
+        gemini: "Gemini",
+        chatgpt: "ChatGPT",
+        claude: "Claude",
+        perplexity: "Perplexity"
+      };
+
+      aiBtnLabel.textContent = names[selectedAI] || "Mode AI";
+      aiDropdown.classList.remove("show");
+
+      // Langsung proses pertanyaan jika input sudah terisi
+      if (searchInput.value.trim() !== "") {
+        triggerAIResponse(searchInput.value.trim(), selectedAI);
+      }
+    });
+  });
+
+  // Pemetaan URL Redirect untuk Provider AI
+  function getAIUrl(provider, query) {
+    const encoded = encodeURIComponent(query);
+    switch (provider) {
+      case "chatgpt":
+        return query ? `https://chatgpt.com/?q=${encoded}` : "https://chatgpt.com/";
+      case "claude":
+        return "https://claude.ai/";
+      case "perplexity":
+        return query ? `https://www.perplexity.ai/search?q=${encoded}` : "https://www.perplexity.ai/";
+      case "gemini":
+      default:
+        return query ? `https://gemini.google.com/app?q=${encoded}` : "https://gemini.google.com/";
+    }
+  }
+
+  // Menampilkan Jawaban Ringkas AI di Modal Pop-up
+  function triggerAIResponse(query, provider) {
+    const providerNames = {
+      gemini: "Google Gemini",
+      chatgpt: "ChatGPT",
+      claude: "Claude AI",
+      perplexity: "Perplexity AI"
+    };
+
+    modalProviderName.textContent = `Ringkasan (${providerNames[provider] || 'AI'})`;
+    modalResponseBody.innerHTML = `<p>🔍 Memproses ringkasan cepat untuk: <b>"${query}"</b>...</p>`;
+    aiModalOverlay.classList.add("show");
+
+    // Simulasi respons ringkas di dalam tab
+    setTimeout(() => {
+      modalResponseBody.innerHTML = `
+        <p style="margin-bottom: 8px;">Berikut adalah pratinjau ringkas terkait query Anda:</p>
+        <div style="background: #f8f9fa; padding: 12px; border-radius: 10px; border-left: 4px solid #1a73e8;">
+          <strong>"${query}"</strong> mencakup topik penting. Untuk mendapatkan penjelasan mendalam, analisis lengkap, atau interaksi lanjutan, Anda dapat melanjutkan percakapan di platform penuh.
+        </div>
+      `;
+    }, 600);
+
+    // Atur aksi tombol "Buka Halaman AI Lengkap"
+    modalContinueBtn.onclick = () => {
+      window.location.href = getAIUrl(provider, query);
+    };
+  }
+
+  // Tutup Modal Pop-up AI
+  modalCloseBtn.addEventListener("click", () => {
+    aiModalOverlay.classList.remove("show");
+  });
+
+  aiModalOverlay.addEventListener("click", (e) => {
+    if (e.target === aiModalOverlay) {
+      aiModalOverlay.classList.remove("show");
+    }
+  });
 </script>
 </body>
 </html>
